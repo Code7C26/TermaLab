@@ -14,13 +14,7 @@
 4. [Público Objetivo](#público-objetivo)
 5. [Stack Tecnológico y Hardware](#stack-tecnológico-y-hardware)
 6. [Funcionalidades Clave](#funcionalidades-clave)
-7. [Requisitos Previos](#requisitos-previos)
-8. [Instalación y Configuración](#instalación-y-configuración)
-9. [Estructura del Repositorio](#estructura-del-repositorio)
-10. [Estado del Proyecto](#estado-del-proyecto)
-11. [Equipo y Roles](#equipo-y-roles)
-12. [Análisis FODA](#análisis-foda)
-13. [Enlaces Importantes](#enlaces-importantes)
+7. [Instalación y Configuración](#instalación-y-configuración)
 
 ---
 
