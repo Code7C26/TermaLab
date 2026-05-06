@@ -4,8 +4,6 @@
 [![Tipo de Proyecto](https://img.shields.io/badge/Tipo-IoT%20%2B%20App-blue)](#)
 [![Plataforma](https://img.shields.io/badge/Plataforma-Mobile%20%2B%20Hardware-orange)](#)
 
-> **Nota para el equipo:** Este repositorio contiene la documentación, planificación, diseño y desarrollo inicial de **TermaLab**, un dispositivo portátil de medición de temperatura conectado a una aplicación móvil. La organización del repositorio es clave para mantener ordenado el avance entre hardware, software, diseño y pruebas.
-
 ---
 
 ## 📖 Índice
