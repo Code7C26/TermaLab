@@ -105,20 +105,6 @@ TermaLab está pensado para:
 
 ---
 
-## ⚙️ Requisitos Previos
-
-Antes de clonar o trabajar sobre el proyecto, se recomienda tener instalado o disponible:
-
-* [Git](https://git-scm.com/)
-* Cuenta de GitHub.
-* Editor de código, como Visual Studio Code.
-* Entorno de desarrollo para el microcontrolador elegido.
-* Herramienta para diseño 3D, en caso de modificar la carcasa.
-* Dispositivo móvil para probar la aplicación.
-* Componentes electrónicos necesarios para el prototipo.
-
----
-
 ## 📦 Instalación y Configuración
 
 Para clonar el repositorio:
