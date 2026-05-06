@@ -110,6 +110,6 @@ TermaLab está pensado para:
 Para clonar el repositorio:
 
 ```bash
-git clone url-del-repositorio
+git clone https://github.com/Code7C26/TermaLab
 cd termalab
 ```
