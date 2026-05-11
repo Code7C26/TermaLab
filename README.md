@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="assets/logo.png" alt="Logo de TermaLab" width="420">
+</p>
 # 🌡️ TermaLab: Termómetro Inteligente con App Integrada
 
 [![Estado del Proyecto](https://img.shields.io/badge/Estado-En_Desarrollo-green)](#)
