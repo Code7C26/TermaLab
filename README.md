@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.png" alt="Logo de TermaLab" width="420">
+  <img src="assets/logo.png" alt="Logo de TermaLab" width="300">
 </p>
 # 🌡️ TermaLab: Termómetro Inteligente con App Integrada
 
