@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.png" alt="Logo de TermaLab" width="420">
+  <img src="assets/logo.png" alt="Logo de TermaLab" width="300">
 </p>
 # 🌡️ TermaLab: Termómetro Inteligente con App Integrada
 
@@ -102,15 +102,10 @@ TermaLab está pensado para:
 
 ## 📦 Instalación y Configuración
 
-## Julian el matador 
-
-
 Para clonar el repositorio:
 
 ```bash
 git clone https://github.com/Code7C26/TermaLab
 cd termalab
 ```
-
-## dadw adaw
-daa
+## ores pepe
