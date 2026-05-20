@@ -286,6 +286,27 @@
       color: #64748b;
       font-size: 14px;
     }
+
+    .mensaje-login {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: bold;
+      min-height: 20px;
+    }
+
+    .mensaje-error {
+      color: #dc2626;
+    }
+
+    .mensaje-ok {
+      color: #16a34a;
+    }
+
+    .input-error {
+      border-color: #dc2626 !important;
+      background: #fef2f2;
+    }
   </style>
 </head>
 
@@ -318,15 +339,16 @@
 
       <div class="form-group">
         <label>Correo electrónico</label>
-        <input type="email" placeholder="usuario@email.com">
+        <input id="email" type="email" placeholder="usuario@email.com">
       </div>
 
       <div class="form-group">
         <label>Contraseña</label>
-        <input type="password" placeholder="********">
+        <input id="password" type="password" placeholder="********">
       </div>
 
-      <button class="btn-primary" onclick="mostrarPantalla('dashboard')">Ingresar</button>
+      <button class="btn-primary" onclick="validarLogin()">Ingresar</button>
+      <p id="mensajeLogin" class="mensaje-login"></p>
       <button class="btn-secondary">Crear cuenta</button>
 
       <div class="link">¿Olvidaste tu contraseña?</div>
@@ -567,6 +589,43 @@
 
       estadoMonitoreo.textContent = estado;
       estadoMonitoreo.className = clase;
+    }
+
+
+    function validarLogin() {
+      const email = document.getElementById("email");
+      const password = document.getElementById("password");
+      const mensaje = document.getElementById("mensajeLogin");
+
+      email.classList.remove("input-error");
+      password.classList.remove("input-error");
+      mensaje.className = "mensaje-login";
+
+      if (email.value.trim() === "" || password.value.trim() === "") {
+        mensaje.textContent = "Debés completar correo electrónico y contraseña.";
+        mensaje.classList.add("mensaje-error");
+
+        if (email.value.trim() === "") {
+          email.classList.add("input-error");
+        }
+
+        if (password.value.trim() === "") {
+          password.classList.add("input-error");
+        }
+
+        return;
+      }
+
+      mensaje.textContent = "Inicio de sesión correcto. Ingresando...";
+      mensaje.classList.add("mensaje-ok");
+
+      setTimeout(function() {
+        mostrarPantalla("dashboard");
+        email.value = "";
+        password.value = "";
+        mensaje.textContent = "";
+        mensaje.className = "mensaje-login";
+      }, 900);
     }
 
     function guardarMedicion() {
