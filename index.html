@@ -3,635 +3,302 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TermaLab - Medidor de Temperatura</title>
-
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    body {
-      background: #eef2f5;
-      color: #1f2933;
-      display: flex;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .app {
-      width: 390px;
-      min-height: 780px;
-      background: #ffffff;
-      border-radius: 28px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-      overflow: hidden;
-      position: relative;
-    }
-
-    header {
-      padding: 20px;
-      background: #0f172a;
-      color: white;
-      text-align: center;
-    }
-
-    header h1 {
-      font-size: 28px;
-      margin-bottom: 5px;
-    }
-
-    header p {
-      font-size: 14px;
-      color: #cbd5e1;
-    }
-
-    .screen {
-      display: none;
-      padding: 25px;
-      padding-bottom: 90px;
-    }
-
-    .screen.active {
-      display: block;
-    }
-
-    .logo {
-      text-align: center;
-      margin-top: 60px;
-    }
-
-    .logo-icon {
-      font-size: 70px;
-      margin-bottom: 15px;
-    }
-
-    .logo h2 {
-      font-size: 34px;
-      margin-bottom: 10px;
-    }
-
-    .logo p {
-      color: #64748b;
-      margin-bottom: 40px;
-    }
-
-    button {
-      border: none;
-      border-radius: 12px;
-      padding: 14px;
-      width: 100%;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 12px;
-    }
-
-    .btn-primary {
-      background: #0f172a;
-      color: white;
-    }
-
-    .btn-secondary {
-      background: #e2e8f0;
-      color: #0f172a;
-    }
-
-    .link {
-      text-align: center;
-      margin-top: 18px;
-      color: #2563eb;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    .form-group label {
-      font-size: 14px;
-      color: #475569;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #cbd5e1;
-      border-radius: 12px;
-      margin-top: 6px;
-      font-size: 15px;
-    }
-
-    .card {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 18px;
-      padding: 20px;
-      margin-bottom: 18px;
-    }
-
-    .temperature-card {
-      text-align: center;
-    }
-
-    .temperature {
-      font-size: 48px;
-      font-weight: bold;
-      margin: 15px 0;
-    }
-
-    .status {
-      display: inline-block;
-      padding: 8px 14px;
-      border-radius: 20px;
-      background: #dcfce7;
-      color: #166534;
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-    .status-high {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .status-low {
-      background: #dbeafe;
-      color: #1d4ed8;
-    }
-
-    .quick-actions {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 15px;
-    }
-
-    .action {
-      background: #f1f5f9;
-      border-radius: 14px;
-      padding: 15px 8px;
-      text-align: center;
-      font-size: 13px;
-      cursor: pointer;
-    }
-
-    .action span {
-      display: block;
-      font-size: 26px;
-      margin-bottom: 6px;
-    }
-
-    .chart {
-      height: 180px;
-      background: linear-gradient(to top, #e2e8f0 1px, transparent 1px);
-      background-size: 100% 36px;
-      border-left: 2px solid #94a3b8;
-      border-bottom: 2px solid #94a3b8;
-      position: relative;
-      margin-top: 20px;
-      border-radius: 8px;
-    }
-
-    .chart-line {
-      position: absolute;
-      left: 20px;
-      bottom: 60px;
-      width: 280px;
-      height: 80px;
-      border-bottom: 4px solid #2563eb;
-      border-radius: 50%;
-      transform: rotate(-5deg);
-    }
-
-    .history-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 0;
-      border-bottom: 1px solid #e2e8f0;
-      font-size: 14px;
-    }
-
-    .history-item strong {
-      display: block;
-      margin-bottom: 3px;
-    }
-
-    .settings-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 0;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .settings-row input {
-      width: 80px;
-      padding: 8px;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
-      text-align: center;
-    }
-
-    .connection {
-      font-size: 14px;
-      color: #16a34a;
-      font-weight: bold;
-    }
-
-    nav {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 75px;
-      background: #ffffff;
-      border-top: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-    }
-
-    nav div {
-      text-align: center;
-      font-size: 12px;
-      color: #64748b;
-      cursor: pointer;
-    }
-
-    nav div span {
-      display: block;
-      font-size: 23px;
-      margin-bottom: 4px;
-    }
-
-    nav .active-nav {
-      color: #0f172a;
-      font-weight: bold;
-    }
-
-    .title {
-      margin-bottom: 20px;
-    }
-
-    .title h2 {
-      font-size: 24px;
-      margin-bottom: 5px;
-    }
-
-    .title p {
-      color: #64748b;
-      font-size: 14px;
-    }
-
-    .mensaje-login {
-      margin-top: 12px;
-      text-align: center;
-      font-size: 14px;
-      font-weight: bold;
-      min-height: 20px;
-    }
-
-    .mensaje-error {
-      color: #dc2626;
-    }
-
-    .mensaje-ok {
-      color: #16a34a;
-    }
-
-    .input-error {
-      border-color: #dc2626 !important;
-      background: #fef2f2;
-    }
-  </style>
+  <meta name="theme-color" content="#071b2f">
+  <meta
+    name="description"
+    content="TermaLab permite monitorear temperaturas de cocina y recibir alertas al alcanzar un objetivo."
+  >
+  <title>TermaLab | Monitor de temperatura</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="src/temperature.js" defer></script>
+  <script src="app.js" defer></script>
 </head>
-
 <body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#monitor" data-screen-link="monitor" aria-label="Ir al monitor">
+        <span class="brand-mark" aria-hidden="true">
+          <span class="brand-mercury"></span>
+        </span>
+        <span>
+          <strong>TermaLab</strong>
+          <small>Temperatura inteligente</small>
+        </span>
+      </a>
 
-  <div class="app">
-
-    <header>
-      <h1>TermaLab</h1>
-      <p>Medidor de temperatura inteligente</p>
+      <div id="connectionBadge" class="connection-badge demo">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span id="connectionText">Modo demo</span>
+      </div>
     </header>
 
-    <!-- Pantalla de inicio -->
-    <section id="inicio" class="screen active">
-      <div class="logo">
-        <div class="logo-icon">🌡️</div>
-        <h2>TermaLab</h2>
-        <p>Tu temperatura, bajo control.</p>
-        <button class="btn-primary" onclick="mostrarPantalla('login')">Comenzar</button>
-        <div class="link" onclick="mostrarPantalla('login')">Iniciar sesión</div>
-      </div>
-    </section>
-
-    <!-- Login -->
-    <section id="login" class="screen">
-      <div class="title">
-        <h2>Bienvenido</h2>
-        <p>Inicia sesión para continuar</p>
-      </div>
-
-      <div class="form-group">
-        <label>Correo electrónico</label>
-        <input id="email" type="email" placeholder="usuario@email.com">
-      </div>
-
-      <div class="form-group">
-        <label>Contraseña</label>
-        <input id="password" type="password" placeholder="********">
-      </div>
-
-      <button class="btn-primary" onclick="validarLogin()">Ingresar</button>
-      <p id="mensajeLogin" class="mensaje-login"></p>
-      <button class="btn-secondary">Crear cuenta</button>
-
-      <div class="link">¿Olvidaste tu contraseña?</div>
-    </section>
-
-    <!-- Dashboard -->
-    <section id="dashboard" class="screen">
-      <div class="title">
-        <h2>Hola, Usuario</h2>
-        <p>Bienvenido de nuevo</p>
-      </div>
-
-      <div class="card temperature-card">
-        <p>Temperatura actual</p>
-        <div id="temperaturaActual" class="temperature">36.8 °C</div>
-        <span id="estadoTemperatura" class="status">Normal</span>
-        <p style="margin-top: 15px;">Última medición: 09:41</p>
-      </div>
-
-      <div class="card">
-        <h3>Accesos rápidos</h3>
-
-        <div class="quick-actions">
-          <div class="action" onclick="mostrarPantalla('historial')">
-            <span>📋</span>
-            Historial
-          </div>
-
-          <div class="action" onclick="mostrarPantalla('ajustes')">
-            <span>🔔</span>
-            Alertas
-          </div>
-
-          <div class="action" onclick="mostrarPantalla('ajustes')">
-            <span>📡</span>
-            Dispositivo
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Monitoreo en tiempo real -->
-    <section id="monitoreo" class="screen">
-      <div class="title">
-        <h2>Monitoreo</h2>
-        <p>Temperatura en tiempo real</p>
-      </div>
-
-      <div class="card temperature-card">
-        <p>Lectura actual</p>
-        <div id="temperaturaMonitoreo" class="temperature">36.8 °C</div>
-        <span id="estadoMonitoreo" class="status">Normal</span>
-      </div>
-
-      <div class="card">
-        <h3>Gráfico en tiempo real</h3>
-        <div class="chart">
-          <div class="chart-line"></div>
-        </div>
-      </div>
-
-      <button class="btn-primary" onclick="actualizarTemperatura()">Actualizar</button>
-      <button class="btn-secondary" onclick="guardarMedicion()">Guardar medición</button>
-    </section>
-
-    <!-- Historial -->
-    <section id="historial" class="screen">
-      <div class="title">
-        <h2>Historial</h2>
-        <p>Registro de mediciones anteriores</p>
-      </div>
-
-      <div class="card">
-        <div class="history-item">
+    <main>
+      <section id="monitor" class="screen active" aria-labelledby="monitorTitle">
+        <div class="section-heading">
           <div>
-            <strong>20/05/2026</strong>
-            09:41
+            <p class="eyebrow">Monitor en tiempo real</p>
+            <h1 id="monitorTitle">Tu temperatura, bajo control.</h1>
+            <p>
+              Elegí un objetivo, iniciá la medición y TermaLab te avisa cuando
+              esté listo.
+            </p>
           </div>
-          <div>36.8 °C</div>
-          <span class="status">Normal</span>
+          <button id="alertsButton" class="button button-ghost button-compact" type="button">
+            Activar alertas
+          </button>
         </div>
 
-        <div class="history-item">
+        <div class="dashboard-grid">
+          <article class="card temperature-panel">
+            <div class="card-header">
+              <div>
+                <p class="card-label">Temperatura actual</p>
+                <p id="sessionLabel" class="muted">Agua para mate</p>
+              </div>
+              <span id="temperatureStatus" class="temperature-status heating">Preparando</span>
+            </div>
+
+            <div class="temperature-layout">
+              <div id="temperatureGauge" class="temperature-gauge" style="--progress: 0deg;">
+                <div class="gauge-center">
+                  <span id="currentTemperature" class="temperature-value">22.0</span>
+                  <span class="temperature-unit">°C</span>
+                </div>
+              </div>
+
+              <div class="temperature-summary">
+                <div>
+                  <span>Objetivo</span>
+                  <strong><span id="targetSummary">80</span> °C</strong>
+                </div>
+                <div>
+                  <span>Faltan</span>
+                  <strong id="remainingSummary">58.0 °C</strong>
+                </div>
+                <div>
+                  <span>Estado</span>
+                  <strong id="stateSummary">Listo para iniciar</strong>
+                </div>
+              </div>
+            </div>
+
+            <div id="goalAlert" class="goal-alert" role="status" aria-live="polite" hidden>
+              <span aria-hidden="true">✓</span>
+              <div>
+                <strong>Objetivo alcanzado</strong>
+                <p>La preparación llegó a la temperatura elegida.</p>
+              </div>
+            </div>
+
+            <div class="primary-actions">
+              <button id="sessionButton" class="button button-primary" type="button">
+                Iniciar medición
+              </button>
+              <button id="saveButton" class="button button-secondary" type="button">
+                Guardar lectura
+              </button>
+            </div>
+          </article>
+
+          <aside class="side-stack">
+            <article class="card">
+              <div class="card-header">
+                <div>
+                  <p class="card-label">Uso rápido</p>
+                  <h2>¿Qué vas a medir?</h2>
+                </div>
+              </div>
+
+              <div class="preset-grid" role="group" aria-label="Objetivos preconfigurados">
+                <button class="preset active" type="button" data-preset="mate">
+                  <span aria-hidden="true">🧉</span>
+                  <strong>Mate</strong>
+                  <small>80 °C</small>
+                </button>
+                <button class="preset" type="button" data-preset="carne">
+                  <span aria-hidden="true">🥩</span>
+                  <strong>Carne</strong>
+                  <small>63 °C</small>
+                </button>
+                <button class="preset" type="button" data-preset="pollo">
+                  <span aria-hidden="true">🍗</span>
+                  <strong>Pollo</strong>
+                  <small>74 °C</small>
+                </button>
+                <button class="preset" type="button" data-preset="personalizado">
+                  <span aria-hidden="true">⚙️</span>
+                  <strong>Personal</strong>
+                  <small>Elegir</small>
+                </button>
+              </div>
+
+              <div class="target-control">
+                <div class="target-control-header">
+                  <label for="targetRange">Temperatura objetivo</label>
+                  <div class="number-field">
+                    <input id="targetNumber" type="number" min="20" max="125" step="1" value="80">
+                    <span>°C</span>
+                  </div>
+                </div>
+                <input id="targetRange" type="range" min="20" max="125" step="1" value="80">
+                <div class="range-labels" aria-hidden="true">
+                  <span>20 °C</span>
+                  <span>125 °C</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="card insight-card">
+              <p class="card-label">Consejo</p>
+              <p id="presetTip">
+                Para mate, 75–80 °C ofrece agua caliente sin llegar al hervor.
+              </p>
+            </article>
+          </aside>
+        </div>
+
+        <article class="card chart-card">
+          <div class="card-header">
+            <div>
+              <p class="card-label">Evolución</p>
+              <h2>Últimas lecturas</h2>
+            </div>
+            <span id="readingCount" class="muted">0 muestras</span>
+          </div>
+
+          <div class="chart-wrapper">
+            <svg
+              id="temperatureChart"
+              class="temperature-chart"
+              viewBox="0 0 720 220"
+              role="img"
+              aria-label="Gráfico de evolución de temperatura"
+            >
+              <line class="grid-line" x1="44" y1="20" x2="44" y2="190"></line>
+              <line class="grid-line" x1="44" y1="190" x2="700" y2="190"></line>
+              <line class="grid-line subtle" x1="44" y1="105" x2="700" y2="105"></line>
+              <line id="targetLine" class="target-line" x1="44" y1="55" x2="700" y2="55"></line>
+              <polyline id="chartLine" class="chart-line" points=""></polyline>
+              <circle id="chartPoint" class="chart-point" cx="44" cy="190" r="5"></circle>
+              <text class="chart-label" x="10" y="25">125°</text>
+              <text class="chart-label" x="18" y="194">20°</text>
+              <text id="targetChartLabel" class="target-label" x="646" y="48">80 °C</text>
+            </svg>
+          </div>
+        </article>
+      </section>
+
+      <section id="history" class="screen" aria-labelledby="historyTitle" hidden>
+        <div class="section-heading">
           <div>
-            <strong>20/05/2026</strong>
-            08:15
+            <p class="eyebrow">Registro local</p>
+            <h1 id="historyTitle">Historial de mediciones</h1>
+            <p>Las lecturas se guardan solamente en este navegador.</p>
           </div>
-          <div>36.6 °C</div>
-          <span class="status">Normal</span>
+          <button id="clearHistoryButton" class="button button-ghost button-compact" type="button">
+            Limpiar historial
+          </button>
         </div>
 
-        <div class="history-item">
+        <article class="card">
+          <div id="historyEmpty" class="empty-state">
+            <span aria-hidden="true">📋</span>
+            <h2>Todavía no hay mediciones</h2>
+            <p>Guardá una lectura desde el monitor para verla acá.</p>
+          </div>
+          <div id="historyList" class="history-list" hidden></div>
+        </article>
+      </section>
+
+      <section id="device" class="screen" aria-labelledby="deviceTitle" hidden>
+        <div class="section-heading">
           <div>
-            <strong>19/05/2026</strong>
-            21:30
+            <p class="eyebrow">Dispositivo</p>
+            <h1 id="deviceTitle">Conexión con el ESP32</h1>
+            <p>
+              Usá el modo demo mientras se arma el prototipo o conectá la app a
+              la dirección local del dispositivo.
+            </p>
           </div>
-          <div>37.2 °C</div>
-          <span class="status">Normal</span>
         </div>
 
-        <div class="history-item">
-          <div>
-            <strong>18/05/2026</strong>
-            22:10
-          </div>
-          <div>38.1 °C</div>
-          <span class="status status-high">Elevada</span>
+        <div class="device-grid">
+          <article class="card">
+            <p class="card-label">Fuente de datos</p>
+            <div class="mode-selector" role="radiogroup" aria-label="Fuente de datos">
+              <label>
+                <input type="radio" name="dataMode" value="demo" checked>
+                <span>
+                  <strong>Modo demo</strong>
+                  <small>Genera datos simulados para probar la interfaz.</small>
+                </span>
+              </label>
+              <label>
+                <input type="radio" name="dataMode" value="device">
+                <span>
+                  <strong>ESP32 real</strong>
+                  <small>Consulta la temperatura desde la red local.</small>
+                </span>
+              </label>
+            </div>
+
+            <div class="device-form">
+              <label for="deviceUrl">Dirección del dispositivo</label>
+              <div class="device-input-row">
+                <input
+                  id="deviceUrl"
+                  type="url"
+                  inputmode="url"
+                  value="http://192.168.4.1"
+                  placeholder="http://192.168.4.1"
+                >
+                <button id="connectButton" class="button button-primary" type="button">
+                  Probar conexión
+                </button>
+              </div>
+              <p id="deviceMessage" class="form-message" role="status" aria-live="polite">
+                El modo demo está activo.
+              </p>
+            </div>
+          </article>
+
+          <article class="card api-card">
+            <p class="card-label">Contrato esperado</p>
+            <h2>Respuesta del ESP32</h2>
+            <p>
+              La app consulta <code>/api/temperature</code> y espera una
+              respuesta JSON como esta:
+            </p>
+            <pre><code>{
+  "temperature": 78.4,
+  "battery": 86,
+  "connected": true
+}</code></pre>
+            <p class="muted">
+              El firmware deberá permitir solicitudes desde esta página o
+              servir directamente estos archivos.
+            </p>
+          </article>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
 
-    <!-- Ajustes -->
-    <section id="ajustes" class="screen">
-      <div class="title">
-        <h2>Ajustes</h2>
-        <p>Alertas y conexión del sensor</p>
-      </div>
-
-      <div class="card">
-        <h3>Alertas de temperatura</h3>
-
-        <div class="settings-row">
-          <span>Mínima °C</span>
-          <input type="number" value="35.0">
-        </div>
-
-        <div class="settings-row">
-          <span>Máxima °C</span>
-          <input type="number" value="38.0">
-        </div>
-
-        <div class="settings-row">
-          <span>Notificaciones</span>
-          <input type="checkbox" checked>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Conexión del sensor</h3>
-
-        <div class="settings-row">
-          <span>Bluetooth</span>
-          <span class="connection">Conectado</span>
-        </div>
-
-        <div class="settings-row">
-          <span>Wi-Fi</span>
-          <span class="connection">Conectado</span>
-        </div>
-
-        <div class="settings-row">
-          <span>Batería</span>
-          <span>85%</span>
-        </div>
-      </div>
-
-      <button class="btn-secondary" onclick="mostrarPantalla('inicio')">Cerrar sesión</button>
-    </section>
-
-    <!-- Navegación inferior -->
-    <nav>
-      <div onclick="mostrarPantalla('dashboard')" id="nav-dashboard">
-        <span>🏠</span>
-        Inicio
-      </div>
-
-      <div onclick="mostrarPantalla('monitoreo')" id="nav-monitoreo">
-        <span>📈</span>
-        Monitoreo
-      </div>
-
-      <div onclick="mostrarPantalla('historial')" id="nav-historial">
-        <span>📋</span>
+    <nav class="bottom-nav" aria-label="Navegación principal">
+      <button class="nav-button active" type="button" data-screen="monitor">
+        <span aria-hidden="true">◉</span>
+        Monitor
+      </button>
+      <button class="nav-button" type="button" data-screen="history">
+        <span aria-hidden="true">▤</span>
         Historial
-      </div>
-
-      <div onclick="mostrarPantalla('ajustes')" id="nav-ajustes">
-        <span>⚙️</span>
-        Ajustes
-      </div>
+      </button>
+      <button class="nav-button" type="button" data-screen="device">
+        <span aria-hidden="true">⌁</span>
+        Dispositivo
+      </button>
     </nav>
-
   </div>
 
-  <script>
-    function mostrarPantalla(idPantalla) {
-      const pantallas = document.querySelectorAll(".screen");
-
-      for (let i = 0; i < pantallas.length; i++) {
-        pantallas[i].classList.remove("active");
-      }
-
-      document.getElementById(idPantalla).classList.add("active");
-
-      actualizarNavegacion(idPantalla);
-    }
-
-    function actualizarNavegacion(idPantalla) {
-      const botonesNav = document.querySelectorAll("nav div");
-
-      for (let i = 0; i < botonesNav.length; i++) {
-        botonesNav[i].classList.remove("active-nav");
-      }
-
-      const botonActivo = document.getElementById("nav-" + idPantalla);
-
-      if (botonActivo) {
-        botonActivo.classList.add("active-nav");
-      }
-    }
-
-    function actualizarTemperatura() {
-      let temperatura = (Math.random() * (38.5 - 35.5) + 35.5).toFixed(1);
-
-      document.getElementById("temperaturaActual").textContent = temperatura + " °C";
-      document.getElementById("temperaturaMonitoreo").textContent = temperatura + " °C";
-
-      cambiarEstado(temperatura);
-    }
-
-    function cambiarEstado(temperatura) {
-      let estado = "Normal";
-      let clase = "status";
-
-      if (temperatura >= 38) {
-        estado = "Elevada";
-        clase = "status status-high";
-      } else if (temperatura <= 35.8) {
-        estado = "Baja";
-        clase = "status status-low";
-      }
-
-      const estadoDashboard = document.getElementById("estadoTemperatura");
-      const estadoMonitoreo = document.getElementById("estadoMonitoreo");
-
-      estadoDashboard.textContent = estado;
-      estadoDashboard.className = clase;
-
-      estadoMonitoreo.textContent = estado;
-      estadoMonitoreo.className = clase;
-    }
-
-
-    function validarLogin() {
-      const email = document.getElementById("email");
-      const password = document.getElementById("password");
-      const mensaje = document.getElementById("mensajeLogin");
-
-      email.classList.remove("input-error");
-      password.classList.remove("input-error");
-      mensaje.className = "mensaje-login";
-
-      if (email.value.trim() === "" || password.value.trim() === "") {
-        mensaje.textContent = "Debés completar correo electrónico y contraseña.";
-        mensaje.classList.add("mensaje-error");
-
-        if (email.value.trim() === "") {
-          email.classList.add("input-error");
-        }
-
-        if (password.value.trim() === "") {
-          password.classList.add("input-error");
-        }
-
-        return;
-      }
-
-      mensaje.textContent = "Inicio de sesión correcto. Ingresando...";
-      mensaje.classList.add("mensaje-ok");
-
-      setTimeout(function() {
-        mostrarPantalla("dashboard");
-        email.value = "";
-        password.value = "";
-        mensaje.textContent = "";
-        mensaje.className = "mensaje-login";
-      }, 900);
-    }
-
-    function guardarMedicion() {
-      alert("Medición guardada correctamente.");
-    }
-  </script>
-
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>

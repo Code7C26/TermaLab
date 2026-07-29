@@ -1,111 +1,94 @@
-<p align="center">
-  <img src="assets/logo.png" alt="Logo de TermaLab" width="300">
-</p>
-# 🌡️ TermaLab: Termómetro Inteligente con App Integrada
+# TermaLab
 
-[![Estado del Proyecto](https://img.shields.io/badge/Estado-En_Desarrollo-green)](#)
-[![Tipo de Proyecto](https://img.shields.io/badge/Tipo-IoT%20%2B%20App-blue)](#)
-[![Plataforma](https://img.shields.io/badge/Plataforma-Mobile%20%2B%20Hardware-orange)](#)
+TermaLab es un termómetro inteligente para cocina, mate y alimentos. El MVP combina una sonda de temperatura, un ESP32 con Wi‑Fi y una interfaz web que permite monitorear la lectura y recibir una alerta al alcanzar un objetivo.
 
----
+## Estado actual
 
-## 📖 Índice
+La primera versión de la app web incluye:
 
-1. [Descripción del Proyecto](#descripción-del-proyecto)
-2. [Problema que Resuelve](#problema-que-resuelve)
-3. [Solución Propuesta](#solución-propuesta)
-4. [Público Objetivo](#público-objetivo)
-5. [Stack Tecnológico y Hardware](#stack-tecnológico-y-hardware)
-6. [Funcionalidades Clave](#funcionalidades-clave)
-7. [Instalación y Configuración](#instalación-y-configuración)
+- Objetivos rápidos para mate, carne y pollo.
+- Temperatura objetivo personalizada entre 20 °C y 125 °C.
+- Modo demo con datos simulados claramente identificados.
+- Gráfico de las últimas 30 lecturas.
+- Alerta visual, vibración y notificación del navegador.
+- Historial guardado localmente.
+- Conexión configurable con un ESP32 por Wi‑Fi.
 
----
+## Ver la app
 
-## 🚀 Descripción del Proyecto
-
-**TermaLab** es un proyecto tecnológico basado en un dispositivo portátil capaz de medir temperatura y enviar los datos a una aplicación móvil. Su objetivo es facilitar el control de temperatura en situaciones cotidianas como cocinar, calentar agua para mate o monitorear líquidos y alimentos.
-
-El sistema busca combinar hardware, conectividad inalámbrica y una interfaz simple para que el usuario pueda visualizar la temperatura en tiempo real y recibir alertas al alcanzar un valor objetivo.
-
----
-
-## ❓ Problema que Resuelve
-
-En el mercado argentino no abundan las opciones accesibles de termómetros inteligentes con aplicación integrada. Muchas personas deben controlar manualmente la temperatura de una comida, bebida o líquido, lo que puede generar errores, pérdida de tiempo o preparaciones que se pasan del punto deseado.
-
-TermaLab responde a esta necesidad ofreciendo una solución práctica, portátil y adaptable a distintos usos cotidianos.
-
----
-
-## 💡 Solución Propuesta
-
-El proyecto propone desarrollar un **termómetro inteligente portátil** conectado a una aplicación móvil. El dispositivo mide la temperatura mediante un sensor, envía los datos al celular y permite al usuario controlar el proceso desde la app.
-
-**Principales características de la solución:**
-
-* Medición de temperatura en tiempo real.
-* Conexión entre el dispositivo y el celular.
-* Visualización clara de los datos en la aplicación.
-* Configuración de una temperatura objetivo.
-* Notificación o alerta al alcanzar la temperatura deseada.
-* Diseño portátil y fácil de utilizar.
-* Carcasa funcional para proteger los componentes.
-
----
-
-## 👥 Público Objetivo
-
-TermaLab está pensado para:
-
-* Personas que cocinan y necesitan controlar temperaturas con mayor precisión.
-* Usuarios que preparan mate y quieren calentar el agua a la temperatura ideal.
-* Personas que buscan comodidad para no revisar manualmente una preparación.
-* Estudiantes, makers o usuarios interesados en soluciones IoT aplicadas al hogar.
-* Cualquier persona que necesite monitorear temperatura de forma simple y práctica.
-
----
-
-## 🛠️ Stack Tecnológico y Hardware
-
-**Software:**
-
-* **Aplicación móvil:** interfaz para visualizar temperatura y recibir alertas.
-* **Lenguajes posibles:** JavaScript, Python, C++ o el lenguaje requerido por el microcontrolador elegido.
-* **Control de versiones:** Git & GitHub.
-* **Documentación:** Markdown.
-
-**Hardware principal:**
-
-* Sensor de temperatura.
-* Microcontrolador.
-* Módulo de conectividad inalámbrica, como Bluetooth o Wi-Fi.
-* Batería o sistema de alimentación simple.
-* Carcasa diseñada e impresa en 3D.
-* Componentes de conexión y protección del circuito.
-
----
-
-## ✅ Funcionalidades Clave
-
-- [ ] Medición de temperatura en tiempo real.
-- [ ] Envío de datos desde el dispositivo al celular.
-- [ ] Aplicación conectada al dispositivo.
-- [ ] Visualización de la temperatura actual en la app.
-- [ ] Configuración de una temperatura objetivo.
-- [ ] Alerta o notificación cuando se alcance la temperatura deseada.
-- [ ] Diseño portátil y fácil de usar.
-- [ ] Carcasa funcional para proteger los componentes.
-- [ ] Alimentación mediante batería o conexión simple.
-- [ ] Lecturas estables y suficientemente precisas para uso práctico.
-
----
-
-## 📦 Instalación y Configuración
-
-Para clonar el repositorio:
+La demo funciona directamente abriendo `index.html`. Para verla con un servidor local:
 
 ```bash
-git clone https://github.com/Code7C26/TermaLab
-cd termalab
+npm run dev
 ```
-## ores pepe
+
+Después abrir:
+
+```text
+http://127.0.0.1:4173
+```
+
+## Ejecutar pruebas
+
+```bash
+npm test
+```
+
+No es necesario instalar dependencias.
+
+## Conexión con el ESP32
+
+La app consulta cada dos segundos:
+
+```text
+GET http://DIRECCION-DEL-ESP32/api/temperature
+```
+
+Respuesta esperada:
+
+```json
+{
+  "temperature": 78.4,
+  "battery": 86,
+  "connected": true
+}
+```
+
+El firmware deberá permitir solicitudes desde la app mediante CORS o servir directamente `index.html`, `styles.css`, `app.js` y `src/temperature.js`.
+
+## Alcance del MVP
+
+Incluido:
+
+1. Lectura de temperatura con DS18B20.
+2. ESP32 conectado por Wi‑Fi.
+3. Visualización desde el celular.
+4. Configuración de temperatura objetivo.
+5. Alerta cuando se alcanza el objetivo.
+
+Fuera del MVP inicial:
+
+- Registro e inicio de sesión.
+- Base de datos en internet.
+- Aplicación móvil nativa.
+- Bluetooth.
+- Pantalla OLED.
+
+## Estructura
+
+```text
+index.html                 Interfaz principal
+styles.css                 Diseño responsive
+app.js                     Estado, navegación y conexión
+src/temperature.js         Reglas y procesamiento de temperatura
+tests/temperature.test.js  Pruebas automáticas
+scripts/dev-server.mjs     Servidor local sin dependencias
+docs/                      Investigación y documentación
+assets/                    Recursos visuales
+design/                    Material de diseño
+```
+
+## Equipo
+
+- Oreste Berta: Scrum Master, planificación y documentación.
+- Julián Ledesma: desarrollo e integración técnica.
