@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#071b2f">
+  <meta name="theme-color" content="#fffaf5">
   <meta
     name="description"
     content="TermaLab permite monitorear temperaturas de cocina y recibir alertas al alcanzar un objetivo."
@@ -17,172 +17,121 @@
   <div class="app-shell">
     <header class="topbar">
       <a class="brand" href="#monitor" data-screen-link="monitor" aria-label="Ir al monitor">
-        <span class="brand-mark" aria-hidden="true">
-          <span class="brand-mercury"></span>
-        </span>
-        <span>
-          <strong>TermaLab</strong>
-          <small>Temperatura inteligente</small>
-        </span>
+        <span class="brand-dot" aria-hidden="true"></span>
+        <strong>TermaLab</strong>
       </a>
 
-      <div id="connectionBadge" class="connection-badge demo">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span id="connectionText">Modo demo</span>
+      <div class="topbar-actions">
+        <div id="connectionBadge" class="connection-badge demo">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="connectionText">Modo demo</span>
+        </div>
+        <button id="alertsButton" class="icon-button" type="button" aria-label="Activar alertas">
+          <span aria-hidden="true">🔔</span>
+        </button>
       </div>
     </header>
 
     <main>
       <section id="monitor" class="screen active" aria-labelledby="monitorTitle">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Monitor en tiempo real</p>
-            <h1 id="monitorTitle">Tu temperatura, bajo control.</h1>
-            <p>
-              Elegí un objetivo, iniciá la medición y TermaLab te avisa cuando
-              esté listo.
-            </p>
-          </div>
-          <button id="alertsButton" class="button button-ghost button-compact" type="button">
-            Activar alertas
+        <div class="monitor-heading">
+          <p class="eyebrow">Termómetro inteligente</p>
+          <h1 id="monitorTitle">Elegí y medí.</h1>
+        </div>
+
+        <div class="preset-grid" role="group" aria-label="Objetivos preconfigurados">
+          <button class="preset active" type="button" data-preset="mate" aria-label="Mate, objetivo 80 grados">
+            <span class="preset-emoji" aria-hidden="true">🧉</span>
+            <strong>Mate</strong>
+            <small>80°</small>
+          </button>
+          <button class="preset" type="button" data-preset="carne" aria-label="Carne, objetivo 63 grados">
+            <span class="preset-emoji" aria-hidden="true">🥩</span>
+            <strong>Carne</strong>
+            <small>63°</small>
+          </button>
+          <button class="preset" type="button" data-preset="pollo" aria-label="Pollo, objetivo 74 grados">
+            <span class="preset-emoji" aria-hidden="true">🍗</span>
+            <strong>Pollo</strong>
+            <small>74°</small>
           </button>
         </div>
 
-        <div class="dashboard-grid">
-          <article class="card temperature-panel">
-            <div class="card-header">
-              <div>
-                <p class="card-label">Temperatura actual</p>
-                <p id="sessionLabel" class="muted">Agua para mate</p>
-              </div>
-              <span id="temperatureStatus" class="temperature-status heating">Preparando</span>
-            </div>
-
-            <div class="temperature-layout">
-              <div id="temperatureGauge" class="temperature-gauge" style="--progress: 0deg;">
-                <div class="gauge-center">
-                  <span id="currentTemperature" class="temperature-value">22.0</span>
-                  <span class="temperature-unit">°C</span>
-                </div>
-              </div>
-
-              <div class="temperature-summary">
-                <div>
-                  <span>Objetivo</span>
-                  <strong><span id="targetSummary">80</span> °C</strong>
-                </div>
-                <div>
-                  <span>Faltan</span>
-                  <strong id="remainingSummary">58.0 °C</strong>
-                </div>
-                <div>
-                  <span>Estado</span>
-                  <strong id="stateSummary">Listo para iniciar</strong>
-                </div>
-              </div>
-            </div>
-
-            <div id="goalAlert" class="goal-alert" role="status" aria-live="polite" hidden>
-              <span aria-hidden="true">✓</span>
-              <div>
-                <strong>Objetivo alcanzado</strong>
-                <p>La preparación llegó a la temperatura elegida.</p>
-              </div>
-            </div>
-
-            <div class="primary-actions">
-              <button id="sessionButton" class="button button-primary" type="button">
-                Iniciar medición
-              </button>
-              <button id="saveButton" class="button button-secondary" type="button">
-                Guardar lectura
-              </button>
-            </div>
-          </article>
-
-          <aside class="side-stack">
-            <article class="card">
-              <div class="card-header">
-                <div>
-                  <p class="card-label">Uso rápido</p>
-                  <h2>¿Qué vas a medir?</h2>
-                </div>
-              </div>
-
-              <div class="preset-grid" role="group" aria-label="Objetivos preconfigurados">
-                <button class="preset active" type="button" data-preset="mate">
-                  <span aria-hidden="true">🧉</span>
-                  <strong>Mate</strong>
-                  <small>80 °C</small>
-                </button>
-                <button class="preset" type="button" data-preset="carne">
-                  <span aria-hidden="true">🥩</span>
-                  <strong>Carne</strong>
-                  <small>63 °C</small>
-                </button>
-                <button class="preset" type="button" data-preset="pollo">
-                  <span aria-hidden="true">🍗</span>
-                  <strong>Pollo</strong>
-                  <small>74 °C</small>
-                </button>
-                <button class="preset" type="button" data-preset="personalizado">
-                  <span aria-hidden="true">⚙️</span>
-                  <strong>Personal</strong>
-                  <small>Elegir</small>
-                </button>
-              </div>
-
-              <div class="target-control">
-                <div class="target-control-header">
-                  <label for="targetRange">Temperatura objetivo</label>
-                  <div class="number-field">
-                    <input id="targetNumber" type="number" min="20" max="125" step="1" value="80">
-                    <span>°C</span>
-                  </div>
-                </div>
-                <input id="targetRange" type="range" min="20" max="125" step="1" value="80">
-                <div class="range-labels" aria-hidden="true">
-                  <span>20 °C</span>
-                  <span>125 °C</span>
-                </div>
-              </div>
-            </article>
-
-            <article class="card insight-card">
-              <p class="card-label">Consejo</p>
-              <p id="presetTip">
-                Para mate, 75–80 °C ofrece agua caliente sin llegar al hervor.
-              </p>
-            </article>
-          </aside>
-        </div>
-
-        <article class="card chart-card">
-          <div class="card-header">
-            <div>
-              <p class="card-label">Evolución</p>
-              <h2>Últimas lecturas</h2>
-            </div>
-            <span id="readingCount" class="muted">0 muestras</span>
+        <article class="temperature-panel">
+          <div class="temperature-copy">
+            <p id="sessionLabel">Agua para mate</p>
+            <span id="temperatureStatus" class="temperature-status heating">Calentando</span>
           </div>
 
-          <div class="chart-wrapper">
-            <svg
-              id="temperatureChart"
-              class="temperature-chart"
-              viewBox="0 0 720 220"
-              role="img"
-              aria-label="Gráfico de evolución de temperatura"
+          <div id="temperatureGauge" class="temperature-gauge" style="--progress: 0deg;">
+            <div class="gauge-center">
+              <span id="currentTemperature" class="temperature-value">22.0</span>
+              <span class="temperature-unit">°C</span>
+            </div>
+          </div>
+
+          <div class="temperature-summary">
+            <div>
+              <span>Objetivo</span>
+              <strong><span id="targetSummary">80</span> °C</strong>
+            </div>
+            <div>
+              <span>Faltan</span>
+              <strong id="remainingSummary">58.0 °C</strong>
+            </div>
+            <div>
+              <span>Estado</span>
+              <strong id="stateSummary">Listo para iniciar</strong>
+            </div>
+          </div>
+
+          <div class="target-control">
+            <div class="target-control-header">
+              <label for="targetNumber">Temperatura objetivo</label>
+              <div class="number-field">
+                <input id="targetNumber" type="number" min="20" max="125" step="1" value="80">
+                <span>°C</span>
+              </div>
+            </div>
+            <input
+              id="targetRange"
+              type="range"
+              min="20"
+              max="125"
+              step="1"
+              value="80"
+              aria-label="Temperatura objetivo"
             >
-              <line class="grid-line" x1="44" y1="20" x2="44" y2="190"></line>
-              <line class="grid-line" x1="44" y1="190" x2="700" y2="190"></line>
-              <line class="grid-line subtle" x1="44" y1="105" x2="700" y2="105"></line>
-              <line id="targetLine" class="target-line" x1="44" y1="55" x2="700" y2="55"></line>
-              <polyline id="chartLine" class="chart-line" points=""></polyline>
-              <circle id="chartPoint" class="chart-point" cx="44" cy="190" r="5"></circle>
-              <text class="chart-label" x="10" y="25">125°</text>
-              <text class="chart-label" x="18" y="194">20°</text>
-              <text id="targetChartLabel" class="target-label" x="646" y="48">80 °C</text>
+          </div>
+
+          <p id="presetTip" class="preset-tip">
+            Para mate, 75–80 °C ofrece agua caliente sin llegar al hervor.
+          </p>
+
+          <div id="goalAlert" class="goal-alert" role="status" aria-live="polite" hidden>
+            <span aria-hidden="true">✓</span>
+            <div>
+              <strong>¡Está listo!</strong>
+              <p>La preparación llegó a la temperatura elegida.</p>
+            </div>
+          </div>
+
+          <div class="primary-actions">
+            <button id="sessionButton" class="button button-primary" type="button">
+              Iniciar medición
+            </button>
+            <button id="saveButton" class="button button-secondary" type="button">
+              Guardar
+            </button>
+          </div>
+
+          <div class="data-vault" aria-hidden="true">
+            <span id="readingCount">0 muestras</span>
+            <svg id="temperatureChart" viewBox="0 0 720 220">
+              <line id="targetLine" x1="44" y1="55" x2="700" y2="55"></line>
+              <polyline id="chartLine" points=""></polyline>
+              <circle id="chartPoint" cx="44" cy="190" r="5"></circle>
+              <text id="targetChartLabel" x="646" y="48">80 °C</text>
             </svg>
           </div>
         </article>
@@ -191,18 +140,18 @@
       <section id="history" class="screen" aria-labelledby="historyTitle" hidden>
         <div class="section-heading">
           <div>
-            <p class="eyebrow">Registro local</p>
-            <h1 id="historyTitle">Historial de mediciones</h1>
+            <p class="eyebrow">Tus mediciones</p>
+            <h1 id="historyTitle">Historial</h1>
             <p>Las lecturas se guardan solamente en este navegador.</p>
           </div>
           <button id="clearHistoryButton" class="button button-ghost button-compact" type="button">
-            Limpiar historial
+            Limpiar
           </button>
         </div>
 
         <article class="card">
           <div id="historyEmpty" class="empty-state">
-            <span aria-hidden="true">📋</span>
+            <span aria-hidden="true">🕘</span>
             <h2>Todavía no hay mediciones</h2>
             <p>Guardá una lectura desde el monitor para verla acá.</p>
           </div>
@@ -214,87 +163,61 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">Dispositivo</p>
-            <h1 id="deviceTitle">Conexión con el ESP32</h1>
-            <p>
-              Usá el modo demo mientras se arma el prototipo o conectá la app a
-              la dirección local del dispositivo.
-            </p>
+            <h1 id="deviceTitle">Conexión</h1>
+            <p>Usá la simulación o conectá el termómetro por su dirección local.</p>
           </div>
         </div>
 
-        <div class="device-grid">
-          <article class="card">
-            <p class="card-label">Fuente de datos</p>
-            <div class="mode-selector" role="radiogroup" aria-label="Fuente de datos">
-              <label>
-                <input type="radio" name="dataMode" value="demo" checked>
-                <span>
-                  <strong>Modo demo</strong>
-                  <small>Genera datos simulados para probar la interfaz.</small>
-                </span>
-              </label>
-              <label>
-                <input type="radio" name="dataMode" value="device">
-                <span>
-                  <strong>ESP32 real</strong>
-                  <small>Consulta la temperatura desde la red local.</small>
-                </span>
-              </label>
-            </div>
+        <article class="card">
+          <div class="mode-selector" role="radiogroup" aria-label="Fuente de datos">
+            <label>
+              <input type="radio" name="dataMode" value="demo" checked>
+              <span>
+                <strong>Modo demo</strong>
+                <small>Simula la temperatura para probar la app.</small>
+              </span>
+            </label>
+            <label>
+              <input type="radio" name="dataMode" value="device">
+              <span>
+                <strong>Termómetro real</strong>
+                <small>Recibe datos del ESP32 en la red local.</small>
+              </span>
+            </label>
+          </div>
 
-            <div class="device-form">
-              <label for="deviceUrl">Dirección del dispositivo</label>
-              <div class="device-input-row">
-                <input
-                  id="deviceUrl"
-                  type="url"
-                  inputmode="url"
-                  value="http://192.168.4.1"
-                  placeholder="http://192.168.4.1"
-                >
-                <button id="connectButton" class="button button-primary" type="button">
-                  Probar conexión
-                </button>
-              </div>
-              <p id="deviceMessage" class="form-message" role="status" aria-live="polite">
-                El modo demo está activo.
-              </p>
-            </div>
-          </article>
-
-          <article class="card api-card">
-            <p class="card-label">Contrato esperado</p>
-            <h2>Respuesta del ESP32</h2>
-            <p>
-              La app consulta <code>/api/temperature</code> y espera una
-              respuesta JSON como esta:
+          <div class="device-form">
+            <label for="deviceUrl">Dirección del dispositivo</label>
+            <input
+              id="deviceUrl"
+              type="url"
+              inputmode="url"
+              value="http://192.168.4.1"
+              placeholder="http://192.168.4.1"
+            >
+            <button id="connectButton" class="button button-primary" type="button">
+              Probar conexión
+            </button>
+            <p id="deviceMessage" class="form-message" role="status" aria-live="polite">
+              El modo demo está activo.
             </p>
-            <pre><code>{
-  "temperature": 78.4,
-  "battery": 86,
-  "connected": true
-}</code></pre>
-            <p class="muted">
-              El firmware deberá permitir solicitudes desde esta página o
-              servir directamente estos archivos.
-            </p>
-          </article>
-        </div>
+          </div>
+        </article>
       </section>
     </main>
 
     <nav class="bottom-nav" aria-label="Navegación principal">
       <button class="nav-button active" type="button" data-screen="monitor">
-        <span aria-hidden="true">◉</span>
-        Monitor
+        <span aria-hidden="true">🌡️</span>
+        <small>Medir</small>
       </button>
       <button class="nav-button" type="button" data-screen="history">
-        <span aria-hidden="true">▤</span>
-        Historial
+        <span aria-hidden="true">🕘</span>
+        <small>Historial</small>
       </button>
       <button class="nav-button" type="button" data-screen="device">
-        <span aria-hidden="true">⌁</span>
-        Dispositivo
+        <span aria-hidden="true">📡</span>
+        <small>Conexión</small>
       </button>
     </nav>
   </div>
