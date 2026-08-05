@@ -1,0 +1,98 @@
+{
+  "version": "v0.3.2",
+  "parameters": {
+    "outerX": 74,
+    "outerY": 44,
+    "totalH": 26,
+    "bottomH": 11.8,
+    "topH": 14.2,
+    "wall": 2.4,
+    "floorT": 2.4,
+    "topT": 2.4,
+    "cornerR": 6,
+    "fit": 0.4,
+    "lipH": 1.8,
+    "lipT": 1.2,
+    "pcbX": 51,
+    "pcbY": 25,
+    "pcbT": 1.6,
+    "pcbClearance": 0.7,
+    "pcbLeftGap": 4.8,
+    "pcbSupportH": 6.8,
+    "usbW": 12.2,
+    "usbH": 6.2,
+    "probeD": 9.2,
+    "bossD": 6.4,
+    "bossInsetX": 6,
+    "bossInsetY": 6,
+    "screwClearanceD": 2.4,
+    "screwHeadD": 4.6,
+    "screwHeadDepth": 1.4,
+    "screwPilotD": 1.8,
+    "screwPilotDepth": 8,
+    "circularSegments": 48,
+    "solidOverlap": 0.3
+  },
+  "bottomBounds": {
+    "min": [
+      -37,
+      -22,
+      0
+    ],
+    "max": [
+      37,
+      22,
+      12.45
+    ]
+  },
+  "topPrintBounds": {
+    "min": [
+      -37,
+      -22,
+      0
+    ],
+    "max": [
+      37,
+      22,
+      16
+    ]
+  },
+  "plateBounds": {
+    "min": [
+      -79,
+      -22,
+      0
+    ],
+    "max": [
+      79,
+      22,
+      16
+    ]
+  },
+  "bottomVolumeMm3": 15198.214829972832,
+  "topVolumeMm3": 15844.375058581763,
+  "bottomSurfaceAreaMm2": 14477.37268460811,
+  "topSurfaceAreaMm2": 14462.885454786894,
+  "bottomTriangleCount": 3288,
+  "topTriangleCount": 3256,
+  "bottomConnectedComponents": 1,
+  "topConnectedComponents": 1,
+  "plateConnectedComponents": 2,
+  "files": [
+    {
+      "filename": "termalab-carcasa-v0.3.2-base.stl",
+      "bytes": 164484,
+      "triangles": 3288
+    },
+    {
+      "filename": "termalab-carcasa-v0.3.2-tapa.stl",
+      "bytes": 162284,
+      "triangles": 3244
+    },
+    {
+      "filename": "termalab-carcasa-v0.3.2-placa-completa.stl",
+      "bytes": 326684,
+      "triangles": 6532
+    }
+  ]
+}
