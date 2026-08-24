@@ -80,14 +80,19 @@ pnpm build
 ## Estructura principal
 
 ```text
-app/                         Interfaz y rutas del servidor
-app/api/devices/demo/latest Simulación remota del dispositivo
-lib/temperature.js           Reglas de temperatura
-tests/                       Pruebas automáticas
-docs/ARQUITECTURA_COCINA.md  Decisiones de producto y próximas etapas
-design/                      Diseño de la carcasa
-assets/                      Documentación y recursos históricos
+├── .openai/  Configuración de publicación del sitio
+├── assets/   Imágenes y recursos usados por la aplicación
+├── design/   Mockups, prototipos y modelos 3D de la carcasa
+├── docs/     Documentación, análisis y presentaciones
+├── src/      Aplicación, lógica, pruebas y herramientas
+├── README.md
+└── .gitignore
 ```
+
+Dentro de `src/`, la interfaz y las rutas del servidor están en `app/`, las
+reglas de temperatura en `lib/`, las pruebas automáticas en `tests/` y el
+worker de publicación en `worker/`. Los recursos públicos de la aplicación se
+conservan en `assets/public/`.
 
 ## Equipo
 

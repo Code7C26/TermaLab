@@ -10,8 +10,8 @@
     "dev": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext dev",
     "build": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext build",
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
-    "test": "node --test tests/temperature.test.mjs",
-    "test:rendered": "node --test tests/rendered-app.test.mjs",
+    "test": "node --test src/tests/temperature.test.mjs",
+    "test:rendered": "node --test src/tests/rendered-app.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
   },
   "dependencies": {
