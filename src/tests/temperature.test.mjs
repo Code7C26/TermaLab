@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   classifyTemperature,
+  formatElapsedTime,
   markerAngleForTemperature,
   progressForTemperature,
   simulatedTemperature,
@@ -23,6 +24,12 @@ test("ubica el indicador entre el extremo frío y el caliente", () => {
   assert.equal(markerAngleForTemperature(0), -150);
   assert.equal(markerAngleForTemperature(110), 150);
   assert.equal(markerAngleForTemperature(220), 150);
+});
+
+test("formatea el tiempo transcurrido de una medición", () => {
+  assert.equal(formatElapsedTime(0), "00:00");
+  assert.equal(formatElapsedTime(65_400), "01:05");
+  assert.equal(formatElapsedTime(-1_000), "00:00");
 });
 
 test("la simulación avanza sin superar el objetivo", () => {

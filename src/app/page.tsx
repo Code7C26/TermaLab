@@ -6,6 +6,7 @@ import {
   PRESETS,
   classifyTemperature,
   clamp,
+  formatElapsedTime,
   markerAngleForTemperature,
   progressForTemperature,
 } from "@/lib/temperature.js";
@@ -36,6 +37,7 @@ export default function Home() {
   const [goalReached, setGoalReached] = useState(false);
   const [connected, setConnected] = useState(true);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [elapsedMilliseconds, setElapsedMilliseconds] = useState(0);
   // These refs keep session timing and the one-shot alert stable across renders.
   const startedAt = useRef<number | null>(null);
   const goalAnnounced = useRef(false);
@@ -51,6 +53,7 @@ export default function Home() {
     setRunning(false);
     setGoalReached(false);
     setTemperature(initialTemperature);
+    setElapsedMilliseconds(0);
     goalAnnounced.current = false;
     startedAt.current = null;
   }, []);
@@ -82,6 +85,7 @@ export default function Home() {
 
     const readTemperature = async () => {
       const elapsed = Date.now() - (startedAt.current ?? Date.now());
+      setElapsedMilliseconds(elapsed);
       const parameters = new URLSearchParams({
         target: String(target),
         start: String(start),
@@ -144,6 +148,7 @@ export default function Home() {
     startedAt.current = Date.now();
     goalAnnounced.current = false;
     setGoalReached(false);
+    setElapsedMilliseconds(0);
     setTemperature(start);
     setConnected(true);
     setRunning(true);
@@ -236,6 +241,11 @@ export default function Home() {
                     </strong>
                     <span>Te avisamos cuando esté lista.</span>
                   </>
+                )}
+                {(running || elapsedMilliseconds > 0) && (
+                  <span className="measurement-timer">
+                    Tiempo transcurrido · {formatElapsedTime(elapsedMilliseconds)}
+                  </span>
                 )}
               </div>
 

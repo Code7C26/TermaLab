@@ -305,6 +305,13 @@ button:focus-visible {
   font-size: 0.72rem;
 }
 
+.temperature-message .measurement-timer {
+  margin-top: 2px;
+  color: var(--cyan);
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+}
+
 .target-control {
   display: flex;
   min-height: 62px;
