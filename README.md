@@ -31,6 +31,7 @@ Disponible:
 - Medidor circular con escala de frío azul a caliente rojo.
 - Objetivos rápidos para carne, pollo y pan.
 - Temperatura personalizada.
+- Cronómetro visible durante cada medición.
 - Simulación enviada por una ruta del servidor, sin conexión LAN.
 - Base preparada para alojarse en Internet y asociar un dominio propio.
 - Pruebas unitarias de la lógica de temperatura.
@@ -56,26 +57,57 @@ GET /api/devices/demo/latest
 
 Cuando exista el módulo completo, el ESP32 enviará las lecturas al servidor mediante HTTPS y un identificador seguro. La aplicación consultará la última lectura almacenada, nunca la dirección local del ESP32.
 
-## Desarrollo
+## Cómo usar el proyecto
 
 Requisitos:
 
 - Node.js 22.13 o superior.
 - pnpm 11.
 
-Instalación y ejecución:
+1. Clonar el repositorio y entrar en la carpeta:
+
+```bash
+git clone https://github.com/Code7C26/TermaLab.git
+cd TermaLab
+```
+
+2. Instalar las dependencias:
 
 ```bash
 pnpm install
+```
+
+3. Iniciar la aplicación en modo desarrollo:
+
+```bash
 pnpm dev
 ```
 
-Pruebas y compilación:
+4. Abrir en el navegador la dirección local indicada por la terminal, elegir
+   una preparación y presionar **Iniciar demostración**. La temperatura y el
+   cronómetro avanzarán hasta alcanzar el objetivo configurado.
+
+Pruebas y compilación de producción:
 
 ```bash
 pnpm test
 pnpm build
+pnpm test:rendered
 ```
+
+## Estado técnico actual
+
+- Rama estable: `master`.
+- Interfaz: Next.js 16 y React 19.
+- Compilación: Vinext y Vite para Cloudflare Workers.
+- Fuente de datos actual: endpoint remoto de demostración
+  `GET /api/devices/demo/latest`.
+- Validación automática: cinco pruebas de lógica y dos pruebas sobre la
+  aplicación compilada.
+- Hardware real: pendiente de integrar el ESP32, la sonda y el envío seguro de
+  lecturas.
+- Persistencia y autenticación: pendientes; la versión actual no guarda datos
+  reales de usuarios ni dispositivos.
 
 ## Estructura principal
 
