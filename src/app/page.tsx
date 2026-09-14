@@ -23,6 +23,8 @@ type Reading = {
 };
 
 const DEFAULT_PRESET = PRESETS[0];
+const READING_INTERVAL_MS = 1_200;
+const READY_TOLERANCE_C = 0.5;
 
 export default function Home() {
   const [screen, setScreen] = useState<Screen>("measurement");
@@ -34,6 +36,7 @@ export default function Home() {
   const [goalReached, setGoalReached] = useState(false);
   const [connected, setConnected] = useState(true);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  // These refs keep session timing and the one-shot alert stable across renders.
   const startedAt = useRef<number | null>(null);
   const goalAnnounced = useRef(false);
 
@@ -43,6 +46,14 @@ export default function Home() {
   );
   const progress = progressForTemperature(temperature, start, target);
   const markerAngle = markerAngleForTemperature(temperature);
+
+  const resetMeasurement = useCallback((initialTemperature: number) => {
+    setRunning(false);
+    setGoalReached(false);
+    setTemperature(initialTemperature);
+    goalAnnounced.current = false;
+    startedAt.current = null;
+  }, []);
 
   const announceGoal = useCallback(() => {
     if (goalAnnounced.current) {
@@ -91,7 +102,7 @@ export default function Home() {
         setConnected(reading.connected);
         setTemperature(reading.temperature);
 
-        if (reading.temperature >= target - 0.5) {
+        if (reading.temperature >= target - READY_TOLERANCE_C) {
           announceGoal();
         }
       } catch {
@@ -100,7 +111,7 @@ export default function Home() {
     };
 
     void readTemperature();
-    const interval = window.setInterval(readTemperature, 1_200);
+    const interval = window.setInterval(readTemperature, READING_INTERVAL_MS);
 
     return () => window.clearInterval(interval);
   }, [announceGoal, running, start, target]);
@@ -112,21 +123,14 @@ export default function Home() {
       return;
     }
 
-    setRunning(false);
-    setGoalReached(false);
-    goalAnnounced.current = false;
-    startedAt.current = null;
+    resetMeasurement(preset.start);
     setPresetId(preset.id);
     setTarget(preset.target);
     setStart(preset.start);
-    setTemperature(preset.start);
   };
 
   const changeTarget = (difference: number) => {
-    setRunning(false);
-    setGoalReached(false);
-    goalAnnounced.current = false;
-    startedAt.current = null;
+    resetMeasurement(start);
     setPresetId("custom");
     setTarget((currentTarget) => clamp(currentTarget + difference, 40, 100));
   };
