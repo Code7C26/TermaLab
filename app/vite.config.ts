@@ -8,7 +8,7 @@ export default defineConfig(async () => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
-    publicDir: "assets/public",
+    publicDir: "../assets/public",
     plugins: [
       vinext(),
       cloudflare({

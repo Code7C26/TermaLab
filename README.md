@@ -68,7 +68,7 @@ Requisitos:
 
 ```bash
 git clone https://github.com/Code7C26/TermaLab.git
-cd TermaLab
+cd TermaLab/app
 ```
 
 2. Instalar las dependencias:
@@ -112,15 +112,15 @@ pnpm test:rendered
 ## Estructura principal
 
 ```text
+├── app/      Código, configuraciones y dependencias de la aplicación
 ├── assets/   Imágenes y recursos usados por la aplicación
 ├── design/   Mockups, prototipos y modelos 3D de la carcasa
 ├── docs/     Documentación, análisis y presentaciones
-├── src/      Aplicación, lógica, pruebas y herramientas
 ├── README.md
 └── .gitignore
 ```
 
-Dentro de `src/`, la interfaz y las rutas del servidor están en `app/`, las
+Dentro de `app/src/`, la interfaz y las rutas del servidor están en `app/`, las
 reglas de temperatura en `lib/`, las pruebas automáticas en `tests/` y el
 worker de publicación en `worker/`. Los recursos públicos de la aplicación se
 conservan en `assets/public/`.
