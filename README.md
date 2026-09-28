@@ -112,7 +112,6 @@ pnpm test:rendered
 ## Estructura principal
 
 ```text
-├── .openai/  Configuración de publicación del sitio
 ├── assets/   Imágenes y recursos usados por la aplicación
 ├── design/   Mockups, prototipos y modelos 3D de la carcasa
 ├── docs/     Documentación, análisis y presentaciones
