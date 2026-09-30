@@ -14,7 +14,7 @@ La primera promesa del producto es:
 
 Requisitos mínimos:
 
-- Sonda penetrante de acero inoxidable apta para alimentos.
+- Sonda penetrante de acero inoxidable apta para alimentos, con termocupla tipo K.
 - Cable especificado para uso continuo a 250–300 °C.
 - Longitud aproximada de 1 metro.
 - Conector desmontable para poder reemplazarla.
@@ -27,7 +27,7 @@ La DS18B20 genérica puede utilizarse en pruebas con líquidos o temperatura amb
 Componentes previstos:
 
 - ESP32 con USB‑C.
-- Lector compatible con la sonda elegida.
+- Lector MAX6675 para termocupla tipo K.
 - Buzzer físico.
 - LED de estado.
 - Botón de encendido o acción.
