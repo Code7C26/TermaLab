@@ -13,10 +13,8 @@ export default defineConfig(async () => {
       vinext(),
       cloudflare({
         viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },
-        config: {
-          main: "./src/worker/index.ts",
-          compatibility_flags: ["nodejs_compat"],
-        },
+        // nombre, base D1 y variables están en wrangler.jsonc
+        configPath: "./wrangler.jsonc",
       }),
     ],
   };

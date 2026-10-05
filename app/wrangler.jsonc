@@ -1,0 +1,25 @@
+// Configuración de Cloudflare para TermaLab Cocina.
+// La lee @cloudflare/vite-plugin (vite.config.ts) y también `wrangler d1 ...`.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "termalab",
+  "main": "./src/worker/index.ts",
+  "compatibility_date": "2026-05-15",
+  "compatibility_flags": ["nodejs_compat"],
+  // archivos estáticos (logo, íconos, manifest, service worker)
+  "assets": { "binding": "ASSETS", "not_found_handling": "none" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "termalab",
+      // Pegá acá el "database_id" que imprime: pnpm wrangler d1 create termalab
+      "database_id": "PEGAR-ID-DE-D1",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    // Se completa con: node scripts/generar-claves-push.mjs
+    "VAPID_PUBLIC_KEY": "",
+    "VAPID_SUBJECT": "https://github.com/Code7C26/TermaLab"
+  }
+}

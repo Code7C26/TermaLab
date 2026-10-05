@@ -4,9 +4,18 @@ import {
   handleImageOptimization,
 } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
+import { handleApi } from "../lib/server/api.js";
+
+interface Fetcher {
+  fetch(request: Request): Promise<Response>;
+}
 
 interface Env {
   ASSETS: Fetcher;
+  DB?: unknown; // Cloudflare D1 (ver wrangler.jsonc)
+  VAPID_PUBLIC_KEY?: string;
+  VAPID_PRIVATE_JWK?: string; // secreto: wrangler secret put VAPID_PRIVATE_JWK
+  VAPID_SUBJECT?: string;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -31,6 +40,10 @@ const worker = {
     context: ExecutionContext,
   ): Promise<Response> {
     const url = new URL(request.url);
+
+    if (url.pathname.startsWith("/api/v1/")) {
+      return handleApi(request, env, context);
+    }
 
     if (url.pathname === "/_vinext/image") {
       const allowedWidths = [...DEFAULT_DEVICE_SIZES, ...DEFAULT_IMAGE_SIZES];

@@ -8,15 +8,23 @@ const description =
 
 export async function generateMetadata(): Promise<Metadata> {
   const requestHeaders = await headers();
-  const host = requestHeaders.get("host") ?? "termalab-mobile.oberta182.chatgpt.site";
+  const host = requestHeaders.get("host") ?? "localhost:5173";
   const protocol = requestHeaders.get("x-forwarded-proto") ?? "https";
   const origin = `${protocol}://${host}`;
 
   return {
     title,
     description,
+    applicationName: "TermaLab",
+    manifest: "/manifest.webmanifest",
     icons: {
-      icon: "/termalab-logo.png",
+      icon: "/icons/favicon-64.png",
+      apple: "/apple-touch-icon.png",
+    },
+    appleWebApp: {
+      capable: true,
+      title: "TermaLab",
+      statusBarStyle: "default",
     },
     openGraph: {
       title,
@@ -44,7 +52,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#f5f7fb",
+  themeColor: "#ffffff",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

@@ -1,6 +1,6 @@
 {
   "name": "termalab-app",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "Aplicación web de TermaLab Cocina para monitorear una sonda de horno desde cualquier lugar.",
   "engines": {
@@ -10,9 +10,14 @@
     "dev": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext dev",
     "build": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext build",
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
-    "test": "node --test src/tests/temperature.test.mjs",
+    "test": "node --test src/tests/temperature.test.mjs src/tests/api.test.mjs",
     "test:rendered": "node --test src/tests/rendered-app.test.mjs",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "deploy": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext build && wrangler deploy",
+    "db:local": "wrangler d1 migrations apply termalab --local --config wrangler.jsonc",
+    "db:remoto": "wrangler d1 migrations apply termalab --remote --config wrangler.jsonc",
+    "dispositivo": "node scripts/crear-dispositivo.mjs",
+    "claves-push": "node scripts/generar-claves-push.mjs"
   },
   "dependencies": {
     "next": "16.2.6",

@@ -592,3 +592,89 @@ button:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---- vinculación y estados del módulo real ---- */
+.cloud-badge.warn i {
+  background: #ef9f37;
+}
+
+.pair-row {
+  grid-template-columns: 40px minmax(0, 1fr);
+}
+
+.pair-form {
+  display: grid;
+  gap: 6px;
+}
+
+.pair-form label {
+  color: var(--navy);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.pair-form > div {
+  display: flex;
+  gap: 8px;
+}
+
+.pair-form input {
+  min-width: 0;
+  flex: 1;
+  padding: 9px 11px;
+  background: #f6f8fb;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px; /* evita el zoom automático en iPhone */
+  letter-spacing: 0.02em;
+}
+
+.pair-form input:focus {
+  outline: 3px solid rgba(5, 188, 199, 0.24);
+  border-color: var(--cyan);
+}
+
+.form-message {
+  color: var(--red);
+  font-size: 0.65rem;
+}
+
+.small-button:disabled,
+.primary-button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.status-label.off {
+  background: #fdecec;
+  color: var(--red);
+}
+
+.install-hint {
+  padding: 12px 14px;
+  margin: 14px 0 0;
+  background: #eaf9fa;
+  border-radius: 16px;
+  color: var(--navy);
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+.link-button {
+  display: block;
+  margin: 18px auto 0;
+  background: none;
+  border: 0;
+  color: var(--red);
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 760;
+}
+
+@media (display-mode: standalone) {
+  .app-header {
+    padding-top: max(16px, env(safe-area-inset-top));
+  }
+}

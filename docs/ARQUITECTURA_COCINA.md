@@ -32,7 +32,7 @@ Componentes previstos:
 - LED de estado.
 - Botón de encendido o acción.
 - Alimentación USB‑C durante el prototipo.
-- Conector lateral para la sonda.
+- Ranura lateral para el cable de la sonda (las horquillas se atornillan en la bornera del MAX6675).
 
 El módulo se coloca sobre la mesada, alejado del horno. La carcasa PLA actual sirve como prueba de dimensiones, pero no debe apoyarse en superficies calientes.
 
@@ -53,6 +53,16 @@ El ESP32 enviará lecturas por HTTPS con:
 - Fecha y hora.
 
 La aplicación leerá esas mediciones desde el servidor. No pedirá una dirección IP ni necesitará estar conectada a la misma red local.
+
+### Implementación (octubre 2026)
+
+- **Servidor:** Cloudflare Worker (`app/src/worker/index.ts`) que atiende `/api/v1` con la lógica de `app/src/lib/server/api.js` y una base D1 (`app/migrations/`).
+- **Identidad del módulo:** cada ESP32 tiene un ID y una clave propia (encabezado `X-Device-Key`). Las apps usan un código de vinculación distinto (`X-App-Key`). En la base solo se guardan los hashes SHA-256.
+- **Cocción:** la app inicia la sesión con un objetivo; el servidor marca cuándo se alcanza (tolerancia 0,5 °C) y se lo responde al módulo en cada envío para que suene el buzzer. El módulo también compara localmente por si se corta el Wi‑Fi.
+- **Frecuencia:** el módulo envía cada 3 s durante una cocción y cada 10 s en reposo; el historial guarda una muestra cada 15 s durante 3 días. Así un módulo encendido todo el día queda dentro del plan gratuito de D1.
+- **Avisos:** push web cifrado (RFC 8291 + VAPID) a la web instalada; avisos locales en la app nativa.
+- **Apps:** web instalable (Next.js) y app nativa SwiftUI en `ios/`, ambas contra la misma API.
+- **Firmware:** `firmware/` (PlatformIO), con portal de configuración Wi‑Fi para cargar servidor, ID y clave sin recompilar.
 
 ## Etapas
 
