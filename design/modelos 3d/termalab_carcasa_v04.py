@@ -195,6 +195,14 @@ def lid_sdf(p):
     lipcuts.append(box(p, (G["x0"] + 4, 0, zp), (8, 16, 20)))
     lipcuts.append(box(p, (G["x1"] - 3, 0, zp), (6, 8, 20)))
     s = U(s, D(lip, *lipcuts))
+    # reborde que une el labio con las paredes (sin él, el labio queda flotando
+    # separado por la holgura `fit`)
+    flange = D(
+        rrect_prism(p, 0, 0, P["innerX"] + 0.6, P["innerY"] + 0.6, P["cornerR"] - W + 0.3, zp, zp + 0.8),
+        rrect_prism(p, 0, 0, lo_x - 2 * P["lipT"], lo_y - 2 * P["lipT"],
+                    max(lr - P["lipT"], 0.6), zp - 5, zp + 5),
+    )
+    s = U(s, D(flange, *lipcuts[4:]))
 
     for bx, by in G["bosses"]:
         s = U(s, cyl_z(p, bx, by, P["bossD"], zp, top + 0.3))
@@ -338,6 +346,20 @@ def check_closed(faces):
     return int((c != 2).sum())
 
 
+def count_components(n_verts, faces):
+    parent = np.arange(n_verts)
+    def find(a):
+        while parent[a] != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+    for a, b, c in faces:
+        ra, rb, rc = find(a), find(b), find(c)
+        parent[rb] = ra
+        parent[find(rc)] = ra
+    return len({find(v) for v in np.unique(faces)})
+
+
 def write_stl(path, verts, faces):
     tri = verts[faces].astype(np.float32)
     nrm = np.cross(tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0])
@@ -374,6 +396,7 @@ if __name__ == "__main__":
         fn = f"{a.out}/termalab-carcasa-v0.4-{name}.stl"
         write_stl(fn, v, fc)
         stats["piezas"][name] = dict(triangulos=len(fc), aristas_abiertas=bad,
+                                     piezas_sueltas=count_components(len(v), fc),
                                      volumen_cm3=round(volume(v, fc) / 1000, 2),
                                      min=v.min(0).round(2).tolist(),
                                      max=v.max(0).round(2).tolist())

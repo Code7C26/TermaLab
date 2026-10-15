@@ -50,6 +50,7 @@
     "base": {
       "triangulos": 11708,
       "aristas_abiertas": 0,
+      "piezas_sueltas": 1,
       "volumen_cm3": 31.85,
       "min": [
         -53.4,
@@ -63,9 +64,10 @@
       ]
     },
     "tapa": {
-      "triangulos": 24424,
+      "triangulos": 24354,
       "aristas_abiertas": 0,
-      "volumen_cm3": 14.57,
+      "piezas_sueltas": 1,
+      "volumen_cm3": 14.74,
       "min": [
         -53.4,
         -20.4,
@@ -80,6 +82,7 @@
     "prueba-usb": {
       "triangulos": 5162,
       "aristas_abiertas": 0,
+      "piezas_sueltas": 1,
       "volumen_cm3": 12.05,
       "min": [
         -53.4,
