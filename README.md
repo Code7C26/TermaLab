@@ -37,11 +37,13 @@ Disponible:
 - Notificaciones push web (VAPID) cuando la comida llega al objetivo, también con la app cerrada.
 - Web instalable (PWA) con ícono, pantalla completa, vinculación de módulo y modo demostración.
 - App nativa para iPhone con medidor, objetivos, cronómetro, gráfico de la última hora y avisos (`ios/`).
-- Carcasa v0.4 para ESP32 + MAX6675 (`design/modelos 3d/`).
+- Módulo ESP32 funcionando con la sonda: manda lecturas reales al servidor.
+- Carcasa v0.4 para ESP32 + MAX6675, impresa y probada; la tapa tiene un reborde que une el labio con las paredes (`design/modelos 3d/`).
 - 14 pruebas automáticas (lógica de temperatura, API sobre SQLite y cifrado push).
 
 Pendiente:
 
+- Ajustes finales de la carcasa a partir de la primera impresión.
 - Validar precisión con un termómetro de referencia (hielo, agua hirviendo, cocción real).
 - Validar la sonda y el cable para uso continuo dentro del horno.
 - Avisos con la app nativa cerrada (requiere Apple Developer Program para APNs).
