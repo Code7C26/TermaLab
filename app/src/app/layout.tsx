@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
+import LanguageController from "./language-controller";
 import "./globals.css";
 
 const title = "TermaLab Cocina";
@@ -63,7 +64,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body>
+        {children}
+        <LanguageController />
+      </body>
     </html>
   );
 }
