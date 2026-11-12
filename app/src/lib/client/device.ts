@@ -102,7 +102,10 @@ function base64UrlToBytes(text: string) {
 }
 
 /** Pide permiso, suscribe este celular y lo registra en el servidor. */
-export async function enablePush(pairing: Pairing): Promise<"ok" | "denied" | "unavailable"> {
+export async function enablePush(
+  pairing: Pairing,
+  lang: string,
+): Promise<"ok" | "denied" | "unavailable"> {
   if (!pushSupported()) return "unavailable";
   const permission = await Notification.requestPermission();
   if (permission !== "granted") return "denied";
@@ -116,8 +119,22 @@ export async function enablePush(pairing: Pairing): Promise<"ok" | "denied" | "u
       userVisibleOnly: true,
       applicationServerKey: base64UrlToBytes(publicKey),
     }));
-  await request(pairing, "/push", { method: "POST", body: JSON.stringify(subscription.toJSON()) });
+  await request(pairing, "/push", {
+    method: "POST",
+    body: JSON.stringify({ ...subscription.toJSON(), lang }),
+  });
   return "ok";
+}
+
+/** Vuelve a registrar la suscripción para que los avisos lleguen en el idioma elegido. */
+export async function syncPushLang(pairing: Pairing, lang: string) {
+  const registration = await navigator.serviceWorker.getRegistration();
+  const subscription = await registration?.pushManager.getSubscription();
+  if (!subscription) return;
+  await request(pairing, "/push", {
+    method: "POST",
+    body: JSON.stringify({ ...subscription.toJSON(), lang }),
+  });
 }
 
 export async function pushEnabled(): Promise<boolean> {

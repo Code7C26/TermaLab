@@ -16,8 +16,8 @@ export const READY_TOLERANCE_C = 0.5;
 export const OFFLINE_AFTER_MS = 20_000;
 export const HISTORY_EVERY_MS = 15_000;
 export const HISTORY_KEEP_MS = 3 * 24 * 3600_000;
-export const INTERVAL_ACTIVE_S = 3;
-export const INTERVAL_IDLE_S = 10;
+export const INTERVAL_ACTIVE_S = 2;
+export const INTERVAL_IDLE_S = 3;
 const MIN_TARGET = 30;
 const MAX_TARGET = 300;
 
@@ -107,18 +107,23 @@ async function notifyGoal(env, device, temperature) {
     subject: env.VAPID_SUBJECT || "https://github.com/Code7C26/TermaLab",
   };
   const { results } = await env.DB.prepare(
-    "SELECT endpoint, p256dh, auth FROM push_subscriptions WHERE device_id = ?",
+    "SELECT endpoint, p256dh, auth, lang FROM push_subscriptions WHERE device_id = ?",
   )
     .bind(device.id)
     .all();
-  const message = {
-    title: "¡Está listo! 🍽️",
-    body: `La sonda marca ${temperature.toFixed(1)} °C (objetivo ${device.target} °C).`,
-    tag: `termalab-${device.id}`,
-    url: "/",
+  const messages = {
+    es: {
+      title: "¡Está listo! 🍽️",
+      body: `La sonda marca ${temperature.toFixed(1)} °C (objetivo ${device.target} °C).`,
+    },
+    en: {
+      title: "It's ready! 🍽️",
+      body: `The probe reads ${temperature.toFixed(1)} °C (target ${device.target} °C).`,
+    },
   };
   for (const row of results ?? []) {
     const subscription = { endpoint: row.endpoint, keys: { p256dh: row.p256dh, auth: row.auth } };
+    const message = { ...(messages[row.lang] ?? messages.es), tag: `termalab-${device.id}`, url: "/" };
     try {
       const status = await sendPush(subscription, message, vapid, env.fetch ?? fetch);
       if (status === 404 || status === 410) {
@@ -277,16 +282,17 @@ async function subscribePush(env, id, request, now) {
   const endpoint = body?.endpoint;
   const p256dh = body?.keys?.p256dh;
   const auth = body?.keys?.auth;
+  const lang = body?.lang === "en" ? "en" : "es";
   if (typeof endpoint !== "string" || !endpoint.startsWith("https://") || !p256dh || !auth) {
     return error(400, "Suscripción inválida.");
   }
   await env.DB.prepare(
-    `INSERT INTO push_subscriptions (endpoint, device_id, p256dh, auth, created_at)
-     VALUES (?, ?, ?, ?, ?)
+    `INSERT INTO push_subscriptions (endpoint, device_id, p256dh, auth, created_at, lang)
+     VALUES (?, ?, ?, ?, ?, ?)
      ON CONFLICT(endpoint) DO UPDATE SET device_id = excluded.device_id,
-       p256dh = excluded.p256dh, auth = excluded.auth`,
+       p256dh = excluded.p256dh, auth = excluded.auth, lang = excluded.lang`,
   )
-    .bind(endpoint, id, p256dh, auth, now)
+    .bind(endpoint, id, p256dh, auth, now, lang)
     .run();
   return json({ ok: true });
 }

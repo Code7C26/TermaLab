@@ -29,7 +29,17 @@ import {
   registerServiceWorker,
   savePairing,
   sendSession,
+  syncPushLang,
 } from "@/lib/client/device";
+import {
+  LANGS,
+  LOCALES,
+  LangContext,
+  MESSAGES,
+  storeLang,
+  useStoredLang,
+  useT,
+} from "@/lib/client/i18n";
 
 type Screen = "measurement" | "account";
 
@@ -76,6 +86,7 @@ function alertLocally(title: string, body: string) {
 
 export default function Home() {
   const [screen, setScreen] = useState<Screen>("measurement");
+  const lang = useStoredLang();
   const pairingRaw = useSyncExternalStore(subscribePairing, readPairing, () => null);
   const pairing = useMemo<Pairing | null>(() => {
     try {
@@ -89,21 +100,27 @@ export default function Home() {
     void registerServiceWorker();
   }, []);
 
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
   return (
-    <main className="site-shell">
-      <section className="phone-shell" aria-label="Aplicación TermaLab Cocina">
-        {pairing ? (
-          <DeviceApp
-            key={pairing.id}
-            pairing={pairing}
-            screen={screen}
-            setScreen={setScreen}
-          />
-        ) : (
-          <DemoApp screen={screen} setScreen={setScreen} />
-        )}
-      </section>
-    </main>
+    <LangContext.Provider value={lang}>
+      <main className="site-shell">
+        <section className="phone-shell" aria-label={MESSAGES[lang].appLabel}>
+          {pairing ? (
+            <DeviceApp
+              key={pairing.id}
+              pairing={pairing}
+              screen={screen}
+              setScreen={setScreen}
+            />
+          ) : (
+            <DemoApp screen={screen} setScreen={setScreen} />
+          )}
+        </section>
+      </main>
+    </LangContext.Provider>
   );
 }
 
@@ -125,8 +142,9 @@ function Header({ badge, tone }: { badge: string; tone: "online" | "offline" | "
 }
 
 function BottomNav({ screen, setScreen }: { screen: Screen; setScreen: (s: Screen) => void }) {
+  const { t } = useT();
   return (
-    <nav className="bottom-nav" aria-label="Navegación principal">
+    <nav className="bottom-nav" aria-label={t.navLabel}>
       <button
         className={screen === "measurement" ? "active" : ""}
         type="button"
@@ -134,7 +152,7 @@ function BottomNav({ screen, setScreen }: { screen: Screen; setScreen: (s: Scree
         aria-current={screen === "measurement" ? "page" : undefined}
       >
         <span aria-hidden="true">°</span>
-        Medición
+        {t.navMeasurement}
       </button>
       <button
         className={screen === "account" ? "active" : ""}
@@ -143,7 +161,7 @@ function BottomNav({ screen, setScreen }: { screen: Screen; setScreen: (s: Scree
         aria-current={screen === "account" ? "page" : undefined}
       >
         <span aria-hidden="true">○</span>
-        Cuenta
+        {t.navAccount}
       </button>
     </nav>
   );
@@ -157,6 +175,7 @@ type GaugeProps = {
 };
 
 function Gauge({ temperature, target, start, probeMissing }: GaugeProps) {
+  const { t } = useT();
   const value = temperature ?? start;
   const classification = classifyTemperature(value, target);
   return (
@@ -168,21 +187,19 @@ function Gauge({ temperature, target, start, probeMissing }: GaugeProps) {
           "--progress": `${progressForTemperature(value, start, target)}%`,
         } as React.CSSProperties
       }
-      aria-label={
-        temperature == null ? "Sin lectura de la sonda" : `Temperatura actual ${temperature.toFixed(1)} grados`
-      }
+      aria-label={temperature == null ? t.noReading : t.currentTemperature(temperature.toFixed(1))}
     >
       <span className="gauge-marker" aria-hidden="true" />
       <div className="gauge-center">
-        <span className="probe-label">SONDA INTERNA</span>
+        <span className="probe-label">{t.probeLabel}</span>
         <div>
           <strong>{temperature == null ? "--" : temperature.toFixed(1)}</strong>
           <span>°C</span>
         </div>
         {probeMissing ? (
-          <p className="high">Sonda desconectada</p>
+          <p className="high">{t.probeMissing}</p>
         ) : (
-          <p className={classification.key}>{classification.label}</p>
+          <p className={classification.key}>{t.classification[classification.key]}</p>
         )}
       </div>
     </div>
@@ -190,8 +207,9 @@ function Gauge({ temperature, target, start, probeMissing }: GaugeProps) {
 }
 
 function PresetRow({ presetId, onSelect }: { presetId: string; onSelect: (id: string) => void }) {
+  const { t } = useT();
   return (
-    <div className="preset-row" aria-label="Tipo de preparación">
+    <div className="preset-row" aria-label={t.presetsLabel}>
       {PRESETS.map((preset) => (
         <button
           key={preset.id}
@@ -201,7 +219,7 @@ function PresetRow({ presetId, onSelect }: { presetId: string; onSelect: (id: st
           aria-pressed={presetId === preset.id}
         >
           <span aria-hidden="true">{preset.emoji}</span>
-          {preset.label}
+          {t.presets[preset.id] ?? preset.label}
         </button>
       ))}
     </div>
@@ -209,15 +227,16 @@ function PresetRow({ presetId, onSelect }: { presetId: string; onSelect: (id: st
 }
 
 function TargetControl({ target, onChange }: { target: number; onChange: (d: number) => void }) {
+  const { t } = useT();
   return (
     <div className="target-control">
-      <span>Objetivo</span>
+      <span>{t.target}</span>
       <div>
-        <button type="button" onClick={() => onChange(-1)} aria-label="Bajar temperatura objetivo">
+        <button type="button" onClick={() => onChange(-1)} aria-label={t.targetDown}>
           −
         </button>
         <strong>{target} °C</strong>
-        <button type="button" onClick={() => onChange(1)} aria-label="Subir temperatura objetivo">
+        <button type="button" onClick={() => onChange(1)} aria-label={t.targetUp}>
           +
         </button>
       </div>
@@ -226,15 +245,16 @@ function TargetControl({ target, onChange }: { target: number; onChange: (d: num
 }
 
 function PairForm() {
+  const { t } = useT();
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [message, setMessage] = useState<"format" | "wrong" | "server" | null>(null);
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     const parsed = parsePairingCode(code);
     if (!parsed) {
-      setMessage("El código tiene la forma abc123-ABCD-EFGH.");
+      setMessage("format");
       return;
     }
     setBusy(true);
@@ -244,19 +264,17 @@ function PairForm() {
       storePairing({ ...parsed, name: status.deviceName });
     } catch (e) {
       const status = (e as { status?: number }).status;
-      setMessage(
-        status === 401 || status === 404
-          ? "Código incorrecto. Revisalo y probá de nuevo."
-          : "No se pudo conectar con el servidor.",
-      );
+      setMessage(status === 401 || status === 404 ? "wrong" : "server");
     } finally {
       setBusy(false);
     }
   };
 
+  const messages = { format: t.pairFormat, wrong: t.pairWrong, server: t.serverUnreachable };
+
   return (
     <form className="pair-form" onSubmit={submit}>
-      <label htmlFor="pairCode">Código del módulo</label>
+      <label htmlFor="pairCode">{t.pairCode}</label>
       <div>
         <input
           id="pairCode"
@@ -269,10 +287,10 @@ function PairForm() {
           inputMode="text"
         />
         <button className="small-button" type="submit" disabled={busy || !code.trim()}>
-          {busy ? "…" : "Vincular"}
+          {busy ? "…" : t.pairButton}
         </button>
       </div>
-      {message && <small className="form-message">{message}</small>}
+      {message && <small className="form-message">{messages[message]}</small>}
     </form>
   );
 }
@@ -280,6 +298,7 @@ function PairForm() {
 const noopSubscribe = () => () => {};
 
 function InstallHint() {
+  const { t } = useT();
   const show = useSyncExternalStore(
     noopSubscribe,
     () => isIos() && !isStandalone(),
@@ -288,9 +307,50 @@ function InstallHint() {
   if (!show) return null;
   return (
     <p className="install-hint">
-      Para instalar TermaLab en el iPhone: tocá <b>Compartir</b> y después{" "}
-      <b>Agregar a inicio</b>. Abrila desde el ícono para recibir avisos.
+      {t.installHintBefore} <b>{t.installShare}</b> {t.installAnd} <b>{t.installAdd}</b>.{" "}
+      {t.installHintAfter}
     </p>
+  );
+}
+
+function LanguageRow() {
+  const { lang, t } = useT();
+  return (
+    <div className="setting-row">
+      <span className="setting-icon" aria-hidden="true">Aa</span>
+      <div>
+        <strong>{t.language}</strong>
+        <small>{t.languageName}</small>
+      </div>
+      <div className="lang-switch" role="group" aria-label={t.language}>
+        {LANGS.map((option) => (
+          <button
+            key={option}
+            className={lang === option ? "active" : ""}
+            type="button"
+            onClick={() => storeLang(option)}
+            aria-pressed={lang === option}
+            lang={option}
+          >
+            {option.toUpperCase()}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function UnitRow() {
+  const { t } = useT();
+  return (
+    <div className="setting-row">
+      <span className="setting-icon" aria-hidden="true">°C</span>
+      <div>
+        <strong>{t.unit}</strong>
+        <small>{t.celsius}</small>
+      </div>
+      <span className="status-label neutral">°C</span>
+    </div>
   );
 }
 
@@ -305,6 +365,7 @@ function DeviceApp({
   screen: Screen;
   setScreen: (s: Screen) => void;
 }) {
+  const { lang, t } = useT();
   const [status, setStatus] = useState<DeviceStatus | null>(null);
   const [reachable, setReachable] = useState(true);
   const [presetId, setPresetId] = useState<string>("custom");
@@ -313,6 +374,11 @@ function DeviceApp({
   const [busy, setBusy] = useState(false);
   const [pushState, setPushState] = useState<"off" | "on" | "denied" | "unavailable">("off");
   const announced = useRef<string | null>(null);
+  // El aviso local se arma dentro del sondeo; leemos el idioma de una ref para no reiniciarlo.
+  const messages = useRef(t);
+  useEffect(() => {
+    messages.current = t;
+  }, [t]);
 
   const refresh = useCallback(async () => {
     try {
@@ -321,7 +387,7 @@ function DeviceApp({
       setReachable(true);
       if (next.active && next.reached && next.reachedAt && announced.current !== next.reachedAt) {
         announced.current = next.reachedAt;
-        alertLocally("TermaLab Cocina", `Llegó a ${next.target} °C.`);
+        alertLocally("TermaLab Cocina", messages.current.goalNotification(next.target));
       }
     } catch (e) {
       if ((e as { status?: number }).status === 401 || (e as { status?: number }).status === 404) {
@@ -349,6 +415,11 @@ function DeviceApp({
     };
   }, [refresh]);
 
+  // Los avisos push los arma el servidor: le contamos en qué idioma mandarlos.
+  useEffect(() => {
+    if (pushState === "on") void syncPushLang(pairing, lang).catch(() => {});
+  }, [pairing, lang, pushState]);
+
   const target = draftTarget ?? status?.target ?? DEFAULT_PRESET.target;
   const active = status?.active ?? false;
   const reached = active && (status?.reached ?? false);
@@ -357,14 +428,15 @@ function DeviceApp({
   const startTemp = status?.startTemperature ?? status?.temperature ?? DEFAULT_PRESET.start;
   const elapsed = active && status?.startedAt ? now - Date.parse(status.startedAt) : 0;
   const classification = classifyTemperature(status?.temperature ?? startTemp, target);
+  const moduleName = status?.deviceName || pairing.name || t.defaultModuleName;
 
   const badge = !reachable
-    ? ["Sin internet", "offline"]
+    ? [t.badgeNoInternet, "offline"]
     : !status?.connected
-      ? ["Módulo apagado", "offline"]
+      ? [t.badgeModuleOff, "offline"]
       : probeMissing
-        ? ["Revisá la sonda", "warn"]
-        : ["Módulo online", "online"];
+        ? [t.badgeCheckProbe, "warn"]
+        : [t.badgeModuleOnline, "online"];
 
   const applyTarget = async (value: number) => {
     setDraftTarget(value);
@@ -404,7 +476,7 @@ function DeviceApp({
 
   const activatePush = async () => {
     try {
-      const result = await enablePush(pairing);
+      const result = await enablePush(pairing, lang);
       setPushState(result === "ok" ? "on" : result);
     } catch {
       setPushState("unavailable");
@@ -418,8 +490,8 @@ function DeviceApp({
         {screen === "measurement" ? (
           <section className="measurement-screen" aria-labelledby="screenTitle">
             <div className="screen-intro">
-              <p>{status?.deviceName || pairing.name || "Módulo central"}</p>
-              <h1 id="screenTitle">Tu comida, en el punto justo.</h1>
+              <p>{moduleName}</p>
+              <h1 id="screenTitle">{t.headline}</h1>
             </div>
             <PresetRow presetId={presetId} onSelect={selectPreset} />
             <Gauge
@@ -431,27 +503,27 @@ function DeviceApp({
             <div className="temperature-message" aria-live="polite">
               {reached ? (
                 <>
-                  <strong>¡Llegó al objetivo!</strong>
-                  <span>Podés retirar la preparación.</span>
+                  <strong>{t.goalReached}</strong>
+                  <span>{t.takeItOut}</span>
                 </>
               ) : !status?.connected ? (
                 <>
-                  <strong>Esperando al módulo</strong>
-                  <span>Revisá que esté enchufado y con Wi‑Fi.</span>
+                  <strong>{t.waitingModule}</strong>
+                  <span>{t.checkModule}</span>
                 </>
               ) : (
                 <>
                   <strong>
                     {classification.remaining > 0
-                      ? `Faltan ${classification.remaining.toFixed(1)} °C`
-                      : "Objetivo alcanzado"}
+                      ? t.remaining(classification.remaining.toFixed(1))
+                      : t.targetReached}
                   </strong>
-                  <span>{active ? "Te avisamos cuando esté lista." : "Elegí el objetivo y empezá."}</span>
+                  <span>{active ? t.weWillNotify : t.chooseTarget}</span>
                 </>
               )}
               {active && (
                 <span className="measurement-timer">
-                  Tiempo transcurrido · {formatElapsedTime(elapsed)}
+                  {t.elapsed} · {formatElapsedTime(elapsed)}
                 </span>
               )}
             </div>
@@ -462,31 +534,31 @@ function DeviceApp({
               onClick={toggle}
               disabled={busy || !reachable}
             >
-              {active ? (reached ? "Terminar cocción" : "Detener cocción") : "Empezar cocción"}
+              {active ? (reached ? t.finishCooking : t.stopCooking) : t.startCooking}
             </button>
           </section>
         ) : (
           <section className="account-screen" aria-labelledby="accountTitle">
             <div className="screen-intro">
-              <p>Configuración</p>
-              <h1 id="accountTitle">Cuenta</h1>
+              <p>{t.settings}</p>
+              <h1 id="accountTitle">{t.account}</h1>
             </div>
             <article className="account-summary">
               <span className="account-avatar">TL</span>
               <div>
-                <strong>{status?.deviceName || pairing.name || "Módulo central"}</strong>
-                <small>Módulo {pairing.id}</small>
+                <strong>{moduleName}</strong>
+                <small>{t.moduleId(pairing.id)}</small>
               </div>
             </article>
             <div className="settings-card">
               <div className="setting-row">
                 <span className="setting-icon" aria-hidden="true">◉</span>
                 <div>
-                  <strong>Estado</strong>
+                  <strong>{t.status}</strong>
                   <small>
                     {status?.measuredAt
-                      ? `Última lectura ${new Date(status.measuredAt).toLocaleTimeString("es-AR")}`
-                      : "Todavía no envió lecturas"}
+                      ? t.lastReading(new Date(status.measuredAt).toLocaleTimeString(LOCALES[lang]))
+                      : t.noReadingsYet}
                   </small>
                 </div>
                 <span className={`status-label ${online ? "" : "off"}`}>{online ? "Online" : "Offline"}</span>
@@ -494,17 +566,17 @@ function DeviceApp({
               <div className="setting-row">
                 <span className="setting-icon" aria-hidden="true">♢</span>
                 <div>
-                  <strong>Avisos en este celular</strong>
+                  <strong>{t.pushTitle}</strong>
                   <small>
                     {pushState === "on"
-                      ? "Te avisamos aunque la app esté cerrada"
+                      ? t.pushOn
                       : pushState === "denied"
-                        ? "Permiso rechazado en Ajustes"
+                        ? t.pushDenied
                         : pushState === "unavailable" || !pushSupported()
                           ? isIos() && !isStandalone()
-                            ? "Instalá la app en el inicio primero"
-                            : "Este navegador no los permite"
-                          : "Al llegar al objetivo"}
+                            ? t.pushInstallFirst
+                            : t.pushUnsupported
+                          : t.pushOff}
                   </small>
                 </div>
                 <button
@@ -513,21 +585,15 @@ function DeviceApp({
                   onClick={activatePush}
                   disabled={pushState === "on"}
                 >
-                  {pushState === "on" ? "Activos" : "Activar"}
+                  {pushState === "on" ? t.active : t.activate}
                 </button>
               </div>
-              <div className="setting-row">
-                <span className="setting-icon" aria-hidden="true">°C</span>
-                <div>
-                  <strong>Unidad</strong>
-                  <small>Grados Celsius</small>
-                </div>
-                <span className="status-label neutral">°C</span>
-              </div>
+              <LanguageRow />
+              <UnitRow />
             </div>
             <InstallHint />
             <button className="link-button" type="button" onClick={() => storePairing(null)}>
-              Desvincular este módulo
+              {t.unpair}
             </button>
           </section>
         )}
@@ -540,6 +606,7 @@ function DeviceApp({
 /* ------------------------------------------------------------ demostración */
 
 function DemoApp({ screen, setScreen }: { screen: Screen; setScreen: (s: Screen) => void }) {
+  const { t } = useT();
   const [presetId, setPresetId] = useState<string>(DEFAULT_PRESET.id);
   const [target, setTarget] = useState<number>(DEFAULT_PRESET.target);
   const [start, setStart] = useState<number>(DEFAULT_PRESET.start);
@@ -551,6 +618,10 @@ function DemoApp({ screen, setScreen }: { screen: Screen; setScreen: (s: Screen)
   const [elapsedMilliseconds, setElapsedMilliseconds] = useState(0);
   const startedAt = useRef<number | null>(null);
   const goalAnnounced = useRef(false);
+  const messages = useRef(t);
+  useEffect(() => {
+    messages.current = t;
+  }, [t]);
 
   const classification = useMemo(() => classifyTemperature(temperature, target), [temperature, target]);
 
@@ -568,7 +639,7 @@ function DemoApp({ screen, setScreen }: { screen: Screen; setScreen: (s: Screen)
     goalAnnounced.current = true;
     setGoalReached(true);
     setRunning(false);
-    alertLocally("TermaLab Cocina", `La preparación llegó a ${target} °C.`);
+    alertLocally("TermaLab Cocina", messages.current.demoGoalNotification(target));
   }, [target]);
 
   useEffect(() => {
@@ -636,35 +707,38 @@ function DemoApp({ screen, setScreen }: { screen: Screen; setScreen: (s: Screen)
 
   return (
     <>
-      <Header badge={connected ? "Demo online" : "Sin conexión"} tone={connected ? "online" : "offline"} />
+      <Header
+        badge={connected ? t.badgeDemoOnline : t.badgeNoConnection}
+        tone={connected ? "online" : "offline"}
+      />
       <div className="screen-area">
         {screen === "measurement" ? (
           <section className="measurement-screen" aria-labelledby="screenTitle">
             <div className="screen-intro">
               <p>TermaLab Cocina</p>
-              <h1 id="screenTitle">Tu comida, en el punto justo.</h1>
+              <h1 id="screenTitle">{t.headline}</h1>
             </div>
             <PresetRow presetId={presetId} onSelect={selectPreset} />
             <Gauge temperature={temperature} target={target} start={start} />
             <div className="temperature-message" aria-live="polite">
               {goalReached ? (
                 <>
-                  <strong>¡Llegó al objetivo!</strong>
-                  <span>Podés retirar la preparación.</span>
+                  <strong>{t.goalReached}</strong>
+                  <span>{t.takeItOut}</span>
                 </>
               ) : (
                 <>
                   <strong>
                     {classification.remaining > 0
-                      ? `Faltan ${classification.remaining.toFixed(1)} °C`
-                      : "Objetivo alcanzado"}
+                      ? t.remaining(classification.remaining.toFixed(1))
+                      : t.targetReached}
                   </strong>
-                  <span>Te avisamos cuando esté lista.</span>
+                  <span>{t.weWillNotify}</span>
                 </>
               )}
               {(running || elapsedMilliseconds > 0) && (
                 <span className="measurement-timer">
-                  Tiempo transcurrido · {formatElapsedTime(elapsedMilliseconds)}
+                  {t.elapsed} · {formatElapsedTime(elapsedMilliseconds)}
                 </span>
               )}
             </div>
@@ -674,20 +748,20 @@ function DemoApp({ screen, setScreen }: { screen: Screen; setScreen: (s: Screen)
               type="button"
               onClick={toggleMeasurement}
             >
-              {running ? "Detener medición" : goalReached ? "Medir de nuevo" : "Iniciar demostración"}
+              {running ? t.stopMeasurement : goalReached ? t.measureAgain : t.startDemo}
             </button>
           </section>
         ) : (
           <section className="account-screen" aria-labelledby="accountTitle">
             <div className="screen-intro">
-              <p>Configuración</p>
-              <h1 id="accountTitle">Cuenta</h1>
+              <p>{t.settings}</p>
+              <h1 id="accountTitle">{t.account}</h1>
             </div>
             <article className="account-summary">
               <span className="account-avatar">TL</span>
               <div>
-                <strong>Modo demostración</strong>
-                <small>Temperaturas simuladas por el servidor</small>
+                <strong>{t.demoMode}</strong>
+                <small>{t.demoSimulated}</small>
               </div>
             </article>
             <div className="settings-card">
@@ -698,27 +772,18 @@ function DemoApp({ screen, setScreen }: { screen: Screen; setScreen: (s: Screen)
               <div className="setting-row">
                 <span className="setting-icon" aria-hidden="true">♢</span>
                 <div>
-                  <strong>Alertas</strong>
-                  <small>{notificationsEnabled ? "Activadas en este celular" : "Aviso al llegar al objetivo"}</small>
+                  <strong>{t.alerts}</strong>
+                  <small>{notificationsEnabled ? t.alertsOn : t.alertsOff}</small>
                 </div>
                 <button className="small-button" type="button" onClick={requestNotifications}>
-                  {notificationsEnabled ? "Activas" : "Activar"}
+                  {notificationsEnabled ? t.alertsActive : t.activate}
                 </button>
               </div>
-              <div className="setting-row">
-                <span className="setting-icon" aria-hidden="true">°C</span>
-                <div>
-                  <strong>Unidad</strong>
-                  <small>Grados Celsius</small>
-                </div>
-                <span className="status-label neutral">°C</span>
-              </div>
+              <LanguageRow />
+              <UnitRow />
             </div>
             <InstallHint />
-            <p className="account-note">
-              Vinculá tu módulo con el código que te dio el script de alta para ver la sonda real
-              desde cualquier lugar.
-            </p>
+            <p className="account-note">{t.demoNote}</p>
           </section>
         )}
       </div>

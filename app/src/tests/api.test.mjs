@@ -37,7 +37,9 @@ function d1(db) {
 
 async function setup(extraEnv = {}) {
   const db = new DatabaseSync(":memory:");
-  db.exec(readFileSync(new URL("../../migrations/0001_inicial.sql", import.meta.url), "utf8"));
+  for (const file of ["0001_inicial.sql", "0002_idioma_avisos.sql"]) {
+    db.exec(readFileSync(new URL(`../../migrations/${file}`, import.meta.url), "utf8"));
+  }
   db.prepare(
     "INSERT INTO devices (id, name, device_key_hash, app_key_hash, created_at) VALUES (?, ?, ?, ?, ?)",
   ).run("abc234", "Módulo de prueba", await sha256Hex("CLAVE-ESP32"), await sha256Hex("K7Q29XMA"), 0);
@@ -84,7 +86,7 @@ test("flujo completo: lectura, cocción, objetivo y alarma", async () => {
   let r = await call(env, "/devices/abc234/readings", { method: "POST", ...dev, body: { temperature: 21.37, probe: "ok" } }, 1_000_000);
   assert.equal(r.status, 200);
   let j = await r.json();
-  assert.deepEqual([j.active, j.alarm, j.interval], [false, false, 10]);
+  assert.deepEqual([j.active, j.alarm, j.interval], [false, false, 3]);
 
   r = await call(env, "/devices/abc234", app, 1_005_000);
   j = await r.json();
@@ -100,7 +102,7 @@ test("flujo completo: lectura, cocción, objetivo y alarma", async () => {
 
   r = await call(env, "/devices/abc234/readings", { method: "POST", ...dev, body: { temperature: 45, probe: "ok" } }, 1_020_000);
   j = await r.json();
-  assert.deepEqual([j.active, j.alarm, j.interval, j.target], [true, false, 3, 60]);
+  assert.deepEqual([j.active, j.alarm, j.interval, j.target], [true, false, 2, 60]);
 
   r = await call(env, "/devices/abc234/readings", { method: "POST", ...dev, body: { temperature: 59.6, probe: "ok" } }, 1_040_000);
   j = await r.json();
@@ -168,6 +170,12 @@ test("suscripción push y aviso al llegar al objetivo", async () => {
   const app = { app: "K7Q29XMA" };
   assert.equal((await call(env, "/devices/abc234/push", { method: "POST", ...app, body: sub })).status, 200);
   assert.equal(db.prepare("SELECT COUNT(*) AS n FROM push_subscriptions").get().n, 1);
+  assert.equal(db.prepare("SELECT lang FROM push_subscriptions").get().lang, "es");
+
+  // al cambiar de idioma la app vuelve a mandar la misma suscripción
+  await call(env, "/devices/abc234/push", { method: "POST", ...app, body: { ...sub, lang: "en" } });
+  assert.equal(db.prepare("SELECT COUNT(*) AS n FROM push_subscriptions").get().n, 1);
+  assert.equal(db.prepare("SELECT lang FROM push_subscriptions").get().lang, "en");
 
   await call(env, "/devices/abc234/session", { method: "POST", ...app, body: { action: "start", target: 50 } });
   await call(env, "/devices/abc234/readings", { method: "POST", device: "CLAVE-ESP32", body: { temperature: 49.8 } });

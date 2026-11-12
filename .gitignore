@@ -10,3 +10,9 @@ pnpm-debug.log*
 # claves locales de TermaLab
 .dev.vars
 .vapid-private.json
+
+# archivos de compilación
+*.tsbuildinfo
+
+# Xcode: datos locales de cada usuario
+xcuserdata/
