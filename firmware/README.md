@@ -76,9 +76,9 @@ enchufá el módulo con el pulsador apretado) y se vuelve a abrir el portal.
 
 ## Notas
 
-- El programa no se pudo compilar en el entorno donde se escribió (no había
-  acceso a las herramientas de ESP32). Si PlatformIO marca un error al
-  compilar, copiá el mensaje y se corrige.
+- El firmware está cargado y probado en el módulo real (ESP32 WROOM-32 de
+  38 pines con MAX6675). Si aparece un error al compilar, revisá que estén
+  instaladas las librerías WiFiManager y ArduinoJson v7.
 - Prototipo: la conexión HTTPS no valida el certificado del servidor
   (`setInsecure`). Para un producto hay que cargar el certificado raíz.
 - El MAX6675 mide de 0 a 1024 °C con resolución de 0,25 °C y un error típico

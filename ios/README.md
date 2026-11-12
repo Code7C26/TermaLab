@@ -66,8 +66,7 @@ ios/
 
 ## Si el proyecto no abre
 
-El proyecto se escribió sin poder compilarlo en una Mac. Si Xcode no lo abre
-o marca errores:
+Si Xcode no abre el proyecto o marca errores al abrirlo, se puede recrear:
 
 1. Xcode → **File → New → Project… → iOS → App**. Nombre `TermaLab`,
    Interface **SwiftUI**, sin Core Data ni tests.
@@ -76,4 +75,5 @@ o marca errores:
    y `Assets.xcassets`, reemplazando el de Xcode) al proyecto nuevo.
 4. En el target, **Minimum Deployments: iOS 17.0**.
 
-Si aparece un error de compilación, copiá el mensaje y se corrige.
+Si aparece un error de compilación, revisá que el target tenga iOS 17.0 como
+mínimo y que estén incluidos todos los archivos de `ios/TermaLab/`.
