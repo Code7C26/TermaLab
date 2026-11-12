@@ -15,20 +15,19 @@ El sistema se divide en cuatro partes:
 1. **Sonda y cable:** termocupla tipo K con punta de acero inoxidable y cable mallado, conectada con terminales de horquilla.
 2. **Módulo central:** ESP32 con Wi‑Fi, lector MAX6675, buzzer, LED y pulsador, en una carcasa impresa que queda fuera del horno.
 3. **Servidor:** Cloudflare Workers + base D1. Recibe las lecturas del módulo, guarda el historial y manda los avisos.
-4. **Apps:** web instalable (también en iPhone, con avisos push) y app nativa para iPhone en SwiftUI.
+4. **App:** web instalable en iPhone, Android y computadora, con avisos push. No hay que bajarla de ninguna tienda.
 
 ```text
 Sonda en el alimento
         │
         ▼
 Módulo ESP32 fuera del horno ── buzzer local al llegar al objetivo
-        │ HTTPS (cada 3 s durante la cocción)
+        │ HTTPS (cada 2 s durante la cocción)
         ▼
 Servidor TermaLab (Cloudflare + D1)
-        │                    │
-        ▼                    ▼
-Web instalable          App iPhone (SwiftUI)
-(avisos push)
+        │
+        ▼
+Web instalable en el celular (avisos push)
 ```
 
 El celular nunca se conecta a la dirección local del módulo: todo pasa por el servidor, así se puede mirar desde cualquier lugar.
@@ -42,9 +41,7 @@ Disponible:
 - Alta de módulos con clave propia para la ESP32 y código de vinculación para las apps (en la base solo se guardan hashes).
 - Notificaciones push web (VAPID) cuando la comida llega al objetivo, también con la app cerrada.
 - Web instalable (PWA) con ícono, pantalla completa, vinculación de módulo y modo demostración.
-- Web y app de iPhone en español e inglés. Los avisos push llegan en el idioma elegido en cada celular.
-- App nativa para iPhone con medidor, objetivos, cronómetro, gráfico de la última hora y avisos (`ios/`).
-- Actividad en vivo en el iPhone: la cocción se ve en la pantalla bloqueada y en la Dynamic Island, y el aviso llega con el celular bloqueado.
+- Web en español e inglés. Los avisos push llegan en el idioma elegido en cada celular.
 - Módulo ESP32 funcionando con la sonda: manda lecturas reales al servidor.
 - Carcasa v0.4 para ESP32 + MAX6675, impresa y probada; la tapa tiene un reborde que une el labio con las paredes (`design/modelos 3d/`).
 - Carcasa v0.5: tapa nueva con pulsador táctil de 12 × 12 mm y el logo grabado.
@@ -55,7 +52,11 @@ Pendiente:
 - Ajustes finales de la carcasa a partir de la primera impresión.
 - Validar precisión con un termómetro de referencia (hielo, agua hirviendo, cocción real). Protocolo y planilla en [`docs/PRUEBAS_DE_PRECISION.md`](docs/PRUEBAS_DE_PRECISION.md).
 - Validar la sonda y el cable para uso continuo dentro del horno.
-- Avisos con la app nativa cerrada del todo (requiere Apple Developer Program para APNs). Hoy la app sigue activa en segundo plano durante la cocción; ver [`ios/README.md`](ios/README.md).
+- Publicar una app nativa en las tiendas.
+
+Experimental, fuera del producto:
+
+- Prototipo de app nativa para iPhone en SwiftUI (`ios/`), con actividad en vivo en la pantalla bloqueada. Funciona, pero no se distribuye: instalarla requiere una Mac con Xcode, y publicarla en el App Store requiere el Apple Developer Program. El producto para el usuario es la web instalable.
 
 > La carcasa impresa debe quedar alejada de las superficies calientes y se considera un prototipo.
 
@@ -86,7 +87,7 @@ pnpm claves-push                   # seguí los 2 pasos que imprime
 pnpm deploy
 ```
 
-`pnpm deploy` imprime la dirección pública, por ejemplo `https://termalab.tu-cuenta.workers.dev`. Esa dirección se carga en el módulo y en la app de iPhone.
+`pnpm deploy` imprime la dirección pública, por ejemplo `https://termalab.tu-cuenta.workers.dev`. Esa dirección se carga en el módulo y es la que abren los usuarios.
 
 ### 3. Dar de alta el módulo
 
@@ -97,16 +98,18 @@ pnpm dispositivo "Módulo de la cocina"
 Ejecutá el comando `wrangler d1 execute ... --remote` que imprime. Anotá:
 
 - **ID y clave del módulo** → en el portal de configuración de la ESP32.
-- **Código para la app** → en la pestaña Cuenta de la web o del iPhone.
+- **Código para la app** → en la pestaña Cuenta de la web.
 
 ### 4. Cargar el firmware
 
 Ver [`firmware/README.md`](firmware/README.md): conexiones, cómo subir el programa con PlatformIO y la primera configuración.
 
-### 5. Instalar en el iPhone
+### 5. Instalar la app en el celular
 
-- **Web:** abrí la dirección pública en Safari → **Compartir → Agregar a inicio**. Abrila desde el ícono, vinculá el módulo y tocá **Activar** en Avisos.
-- **Nativa:** ver [`ios/README.md`](ios/README.md).
+- **iPhone:** abrí la dirección pública en Safari → **Compartir → Agregar a inicio**.
+- **Android:** abrí la dirección pública en Chrome → menú **⋮ → Agregar a pantalla principal**.
+
+Abrila desde el ícono, vinculá el módulo y tocá **Activar** en Avisos.
 
 ### Pruebas
 
@@ -136,7 +139,7 @@ pnpm test:rendered
 │   ├── scripts/      alta de módulos y claves push
 │   └── src/          interfaz, API (lib/server), cliente (lib/client), pruebas
 ├── firmware/   Programa del ESP32 (PlatformIO)
-├── ios/        App nativa para iPhone (SwiftUI)
+├── ios/        Prototipo experimental de app nativa para iPhone (SwiftUI)
 ├── assets/     Imágenes, íconos, manifest y service worker
 ├── design/     Prototipos y modelos 3D de la carcasa
 ├── docs/       Documentación, análisis y presentaciones
@@ -151,11 +154,11 @@ pnpm test:rendered
 | [`docs/ARQUITECTURA_COCINA.md`](docs/ARQUITECTURA_COCINA.md) | Arquitectura, decisiones y etapas |
 | [`docs/PRUEBAS_DE_PRECISION.md`](docs/PRUEBAS_DE_PRECISION.md) | Protocolo y resultados de las pruebas con termómetro de referencia |
 | [`firmware/README.md`](firmware/README.md) | Conexiones, carga del programa y señales del módulo |
-| [`ios/README.md`](ios/README.md) | Instalación y uso de la app nativa |
+| [`ios/README.md`](ios/README.md) | Prototipo experimental de app nativa para iPhone |
 | [`design/modelos 3d/`](design/modelos%203d/) | Carcasa: modelos, medidas, impresión y armado |
 | [`docs/`](docs/) | Análisis previos: Bluetooth vs Wi‑Fi, comparación de sensores, FODA, product backlog, roles y encuesta |
 
 ## Equipo
 
-- Oreste Berta: Scrum Master, planificación y documentación.
-- Julián Ledesma: desarrollo e integración técnica.
+- Oreste Berta: Scrum Master y desarrollo. Planificación, software, firmware y carcasa impresa en 3D.
+- Julián Ledesma: investigación y diseño. Comparación de sensores, elección de Wi‑Fi, logo y primer prototipo de la app.

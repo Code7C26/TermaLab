@@ -12,7 +12,7 @@ carga del firmware están en el [README](../README.md) y en
 
 - **Sonda:** termocupla tipo K con punta de acero inoxidable y cable mallado.
 - **Módulo central:** caja con pulsador, LED de estado, buzzer y entrada USB‑C.
-- **Aplicación:** web instalable en cualquier celular y app nativa para iPhone.
+- **Aplicación:** web instalable en cualquier celular o computadora.
 
 Con el módulo vienen tres datos, que se generan al darlo de alta:
 
@@ -58,8 +58,9 @@ y se vuelve a abrir la página de configuración.
 ### Web instalable (Android, iPhone o computadora)
 
 1. Abrí la dirección de TermaLab en el navegador.
-2. En iPhone: tocá **Compartir** y después **Agregar a inicio**. Abrila desde
-   el ícono nuevo.
+2. En iPhone (Safari): tocá **Compartir** y después **Agregar a inicio**.
+   En Android (Chrome): tocá el menú **⋮** y después **Agregar a pantalla
+   principal**. Abrila desde el ícono nuevo.
 3. Entrá a la pestaña **Cuenta**, escribí el **Código del módulo** y tocá
    **Vincular**.
 4. En **Avisos en este celular** tocá **Activar** y aceptá el permiso. Así el
@@ -68,16 +69,7 @@ y se vuelve a abrir la página de configuración.
 Sin vincular un módulo, la aplicación funciona en **modo demostración** con
 temperaturas simuladas. Sirve para conocerla antes de tener el producto.
 
-### App nativa para iPhone
-
-La instalación con Xcode está explicada en [`ios/README.md`](../ios/README.md).
-Una vez instalada, se vincula igual: pestaña **Cuenta**, dirección del
-servidor y código del módulo.
-
-Con la app nativa, al empezar una cocción aparece una **actividad en vivo** en
-la pantalla bloqueada: temperatura, objetivo y avance sin desbloquear el
-iPhone. El aviso llega también con el celular bloqueado, siempre que no cierres
-la app deslizándola hacia arriba.
+No hace falta bajar nada de una tienda de aplicaciones.
 
 ## Cocinar con TermaLab
 

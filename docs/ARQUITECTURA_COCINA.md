@@ -34,7 +34,7 @@ Componentes previstos:
 - Alimentación USB‑C durante el prototipo.
 - Ranura lateral para el cable de la sonda (las horquillas se atornillan en la bornera del MAX6675).
 
-El módulo se coloca sobre la mesada, alejado del horno. La carcasa PLA actual sirve como prueba de dimensiones, pero no debe apoyarse en superficies calientes.
+El módulo se coloca sobre la mesada, alejado del horno. La carcasa impresa en 3D no debe apoyarse en superficies calientes.
 
 ### 3. Aplicación y servidor
 
@@ -59,9 +59,9 @@ La aplicación leerá esas mediciones desde el servidor. No pedirá una direcci�
 - **Servidor:** Cloudflare Worker (`app/src/worker/index.ts`) que atiende `/api/v1` con la lógica de `app/src/lib/server/api.js` y una base D1 (`app/migrations/`).
 - **Identidad del módulo:** cada ESP32 tiene un ID y una clave propia (encabezado `X-Device-Key`). Las apps usan un código de vinculación distinto (`X-App-Key`). En la base solo se guardan los hashes SHA-256.
 - **Cocción:** la app inicia la sesión con un objetivo; el servidor marca cuándo se alcanza (tolerancia 0,5 °C) y se lo responde al módulo en cada envío para que suene el buzzer. El módulo también compara localmente por si se corta el Wi‑Fi.
-- **Frecuencia:** el módulo envía cada 3 s durante una cocción y cada 10 s en reposo; el historial guarda una muestra cada 15 s durante 3 días. Así un módulo encendido todo el día queda dentro del plan gratuito de D1.
-- **Avisos:** push web cifrado (RFC 8291 + VAPID) a la web instalada; avisos locales en la app nativa.
-- **Apps:** web instalable (Next.js) y app nativa SwiftUI en `ios/`, ambas contra la misma API.
+- **Frecuencia:** el módulo envía cada 2 s durante una cocción y cada 3 s en reposo; el historial guarda una muestra cada 15 s durante 3 días. Así un módulo encendido todo el día queda dentro del plan gratuito de D1.
+- **Avisos:** push web cifrado (RFC 8291 + VAPID) a la web instalada, también con la aplicación cerrada.
+- **App:** web instalable (Next.js) para iPhone, Android y computadora. En `ios/` hay un prototipo experimental de app nativa en SwiftUI contra la misma API, que no forma parte del producto.
 - **Firmware:** `firmware/` (PlatformIO), con portal de configuración Wi‑Fi para cargar servidor, ID y clave sin recompilar.
 
 ## Etapas
@@ -99,10 +99,10 @@ La aplicación leerá esas mediciones desde el servidor. No pedirá una direcci�
 - Aviso por dispositivo sin conexión.
 - Historial de cocciones.
 
-## Límites de la primera versión
+## Límites de la versión actual
 
-- La aplicación actual utiliza datos simulados.
-- La pestaña Cuenta representa la experiencia futura; todavía no registra usuarios.
-- Una notificación del navegador en primer plano no reemplaza las notificaciones push.
+- No hay cuentas de usuario: cada celular se vincula a un módulo con su código.
+- En iPhone los avisos push funcionan solo con la web instalada en el inicio (iOS 16.4 o posterior).
+- El plan gratuito de D1 (100.000 filas escritas por día) alcanza para un módulo encendido todo el día. Con más módulos hay que espaciar los envíos o pasar al plan pago.
 - Los objetivos son configurables y no constituyen una certificación de seguridad alimentaria.
 - Antes de vender el producto se debe documentar la precisión, la ubicación correcta de la sonda, la limpieza y los materiales en contacto con alimentos.

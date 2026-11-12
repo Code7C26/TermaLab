@@ -3,7 +3,7 @@
 ESP32 WROOM-32 (38 pines, USB-C) + MAX6675 (HW-550) + termocupla tipo K.
 
 El módulo lee la sonda una vez por segundo y manda la temperatura al servidor
-de TermaLab por HTTPS: cada 3 s durante una cocción y cada 10 s el resto del
+de TermaLab por HTTPS: cada 2 s durante una cocción y cada 3 s el resto del
 tiempo. Cuando la comida llega al objetivo suenan el buzzer y el LED, aunque
 en ese momento se haya cortado el Wi-Fi (usa el último objetivo que recibió).
 

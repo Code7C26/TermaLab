@@ -1,5 +1,9 @@
 # TermaLab para iPhone (SwiftUI)
 
+> **Prototipo experimental.** No forma parte del producto: el usuario usa la
+> web instalable, que no necesita Xcode ni el App Store. Esta app se hizo para
+> probar la actividad en vivo de iOS y queda como base para una versión futura.
+
 App nativa de TermaLab Cocina. Usa el mismo servidor que la web: muestra la
 temperatura de la sonda, permite elegir el objetivo, empezar y terminar la
 cocción, ver la curva de la última hora y avisa cuando la comida está lista.
