@@ -1,0 +1,9 @@
+{
+  "deviceId": "demo",
+  "deviceName": "Módulo central",
+  "temperature": 51.7,
+  "target": 63,
+  "connected": true,
+  "source": "demo",
+  "measuredAt": "2026-11-12T11:12:56.416Z"
+}
