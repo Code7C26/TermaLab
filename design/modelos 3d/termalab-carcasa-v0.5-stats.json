@@ -1,0 +1,134 @@
+{
+  "version": "v0.5",
+  "parametros": {
+    "innerX": 102.0,
+    "innerY": 36.0,
+    "wall": 2.4,
+    "floorT": 2.4,
+    "topT": 2.4,
+    "cornerR": 5.0,
+    "partZ": 25.6,
+    "totalH": 32.8,
+    "fit": 0.3,
+    "lipH": 1.8,
+    "lipT": 1.2,
+    "pcbL": 48.2,
+    "pcbW": 25.8,
+    "pcbT": 1.6,
+    "pcbUsbGap": 0.5,
+    "underClear": 20.0,
+    "pcbClear": 0.4,
+    "compH": 3.5,
+    "usbW": 12.4,
+    "usbH": 6.8,
+    "usbR": 2.2,
+    "maxL": 32.25,
+    "maxW": 15.88,
+    "maxGapFromEsp": 3.3,
+    "maxStandoff": 3.0,
+    "maxHoleFromPins": 16.1,
+    "maxPegD": 2.6,
+    "probeCableD": 4.0,
+    "probeZ": 12.0,
+    "ledD": 5.1,
+    "buzzerD": 12.4,
+    "buzzerRingH": 5.0,
+    "buttonX": 12.0,
+    "ledX": 24.0,
+    "buzzerX": 42.0,
+    "swW": 12.0,
+    "swBodyH": 3.6,
+    "swTotalH": 8.3,
+    "swFit": 0.2,
+    "capW": 11.5,
+    "capH": 3.0,
+    "capFit": 0.3,
+    "capProtrude": 1.2,
+    "swTravel": 0.3,
+    "sockWall": 1.6,
+    "clipW": 6.0,
+    "clipT": 1.0,
+    "clipHook": 0.4,
+    "clipHookH": 1.0,
+    "actOpen": 9.0,
+    "logoW": 48.0,
+    "logoCX": -23.0,
+    "logoCY": 0.0,
+    "logoDepth": 0.6,
+    "bossD": 6.4,
+    "bossX": 47.4,
+    "bossY": 16.6,
+    "pilotD": 1.8,
+    "pilotDepth": 12.0,
+    "clearD": 2.4,
+    "headD": 4.6,
+    "headDepth": 1.6,
+    "logoSkin": 1.3
+  },
+  "piezas": {
+    "base": {
+      "triangulos": 12902,
+      "aristas_abiertas": 0,
+      "piezas_sueltas": 1,
+      "volumen_cm3": 31.86,
+      "min": [
+        -53.4,
+        -20.4,
+        0.0
+      ],
+      "max": [
+        53.4,
+        20.4,
+        25.6
+      ]
+    },
+    "tapa": {
+      "triangulos": 49906,
+      "aristas_abiertas": 0,
+      "piezas_sueltas": 2,
+      "volumen_cm3": 14.91,
+      "min": [
+        -53.4,
+        -20.4,
+        0.0
+      ],
+      "max": [
+        53.4,
+        20.4,
+        19.91
+      ]
+    },
+    "prueba-usb": {
+      "triangulos": 6008,
+      "aristas_abiertas": 0,
+      "piezas_sueltas": 1,
+      "volumen_cm3": 12.05,
+      "min": [
+        -53.4,
+        -20.4,
+        0.0
+      ],
+      "max": [
+        -22.5,
+        20.4,
+        25.6
+      ]
+    },
+    "prueba-pulsador": {
+      "triangulos": 4768,
+      "aristas_abiertas": 0,
+      "piezas_sueltas": 1,
+      "volumen_cm3": 2.45,
+      "min": [
+        3.0,
+        -20.4,
+        0.0
+      ],
+      "max": [
+        22.0,
+        20.4,
+        9.0
+      ]
+    }
+  }
+}

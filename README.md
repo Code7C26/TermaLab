@@ -2,6 +2,12 @@
 
 TermaLab Cocina es un termómetro conectado para horno. Una sonda permanece en el alimento durante la cocción, el módulo central queda fuera del horno y la aplicación permite consultar la temperatura y recibir alertas desde cualquier lugar.
 
+**Probar la app:** URL_PUBLICA_TERMALAB (sin módulo vinculado abre en modo demostración).
+
+**Manual de usuario:** [`docs/MANUAL_DE_USUARIO.md`](docs/MANUAL_DE_USUARIO.md)
+
+![Carcasa v0.5 del módulo central](design/modelos%203d/termalab-carcasa-v0.5-vistas.png)
+
 ## Producto
 
 El sistema se divide en cuatro partes:
@@ -36,17 +42,20 @@ Disponible:
 - Alta de módulos con clave propia para la ESP32 y código de vinculación para las apps (en la base solo se guardan hashes).
 - Notificaciones push web (VAPID) cuando la comida llega al objetivo, también con la app cerrada.
 - Web instalable (PWA) con ícono, pantalla completa, vinculación de módulo y modo demostración.
+- Web y app de iPhone en español e inglés. Los avisos push llegan en el idioma elegido en cada celular.
 - App nativa para iPhone con medidor, objetivos, cronómetro, gráfico de la última hora y avisos (`ios/`).
+- Actividad en vivo en el iPhone: la cocción se ve en la pantalla bloqueada y en la Dynamic Island, y el aviso llega con el celular bloqueado.
 - Módulo ESP32 funcionando con la sonda: manda lecturas reales al servidor.
 - Carcasa v0.4 para ESP32 + MAX6675, impresa y probada; la tapa tiene un reborde que une el labio con las paredes (`design/modelos 3d/`).
+- Carcasa v0.5: tapa nueva con pulsador táctil de 12 × 12 mm y el logo grabado.
 - 14 pruebas automáticas (lógica de temperatura, API sobre SQLite y cifrado push).
 
 Pendiente:
 
 - Ajustes finales de la carcasa a partir de la primera impresión.
-- Validar precisión con un termómetro de referencia (hielo, agua hirviendo, cocción real).
+- Validar precisión con un termómetro de referencia (hielo, agua hirviendo, cocción real). Protocolo y planilla en [`docs/PRUEBAS_DE_PRECISION.md`](docs/PRUEBAS_DE_PRECISION.md).
 - Validar la sonda y el cable para uso continuo dentro del horno.
-- Avisos con la app nativa cerrada (requiere Apple Developer Program para APNs).
+- Avisos con la app nativa cerrada del todo (requiere Apple Developer Program para APNs). Hoy la app sigue activa en segundo plano durante la cocción; ver [`ios/README.md`](ios/README.md).
 
 > La carcasa impresa debe quedar alejada de las superficies calientes y se considera un prototipo.
 
@@ -102,7 +111,7 @@ Ver [`firmware/README.md`](firmware/README.md): conexiones, cómo subir el progr
 ### Pruebas
 
 ```bash
-pnpm test        # lógica de temperatura + API + cifrado push
+pnpm test        # 14 pruebas: lógica de temperatura + API + cifrado push
 pnpm build
 pnpm test:rendered
 ```
@@ -133,6 +142,18 @@ pnpm test:rendered
 ├── docs/       Documentación, análisis y presentaciones
 └── README.md
 ```
+
+## Documentación
+
+| Documento | Contenido |
+|---|---|
+| [`docs/MANUAL_DE_USUARIO.md`](docs/MANUAL_DE_USUARIO.md) | Cómo configurar y usar el producto |
+| [`docs/ARQUITECTURA_COCINA.md`](docs/ARQUITECTURA_COCINA.md) | Arquitectura, decisiones y etapas |
+| [`docs/PRUEBAS_DE_PRECISION.md`](docs/PRUEBAS_DE_PRECISION.md) | Protocolo y resultados de las pruebas con termómetro de referencia |
+| [`firmware/README.md`](firmware/README.md) | Conexiones, carga del programa y señales del módulo |
+| [`ios/README.md`](ios/README.md) | Instalación y uso de la app nativa |
+| [`design/modelos 3d/`](design/modelos%203d/) | Carcasa: modelos, medidas, impresión y armado |
+| [`docs/`](docs/) | Análisis previos: Bluetooth vs Wi‑Fi, comparación de sensores, FODA, product backlog, roles y encuesta |
 
 ## Equipo
 
