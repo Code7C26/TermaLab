@@ -7,21 +7,19 @@ struct AccountView: View {
 
     var body: some View {
         @Bindable var store = store
+        let t = store.t
         NavigationStack {
             Form {
                 Section {
                     HStack(spacing: 14) {
                         Text("TL")
-                            .font(.headline.weight(.heavy))
-                            .foregroundStyle(.white)
+                            .font(.subheadline.weight(.medium))
+                            .foregroundStyle(Color.ink)
                             .frame(width: 46, height: 46)
-                            .background(
-                                LinearGradient(colors: [.brandCyan, .blue], startPoint: .topLeading, endPoint: .bottomTrailing),
-                                in: RoundedRectangle(cornerRadius: 14)
-                            )
+                            .background(Color.surfaceSoft, in: Circle())
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(store.isDemo ? "Modo demostración" : store.deviceName).font(.headline)
-                            Text(store.isDemo ? "Temperaturas simuladas en el celular" : "Módulo \(store.pairing?.id ?? "")")
+                            Text(store.isDemo ? t.demoMode : store.deviceName).font(.body.weight(.medium))
+                            Text(store.isDemo ? t.demoSimulated : t.moduleId(store.pairing?.id ?? ""))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -36,9 +34,9 @@ struct AccountView: View {
                         .autocorrectionDisabled()
                         .onSubmit { store.saveServerAddress() }
                 } header: {
-                    Text("Servidor")
+                    Text(t.server)
                 } footer: {
-                    Text("La misma dirección donde está publicada la app web.")
+                    Text(t.serverFooter)
                 }
 
                 if store.isDemo {
@@ -55,39 +53,52 @@ struct AccountView: View {
                             }
                         } label: {
                             HStack {
-                                Text("Vincular módulo")
+                                Text(t.pairButton)
                                 if pairing { Spacer(); ProgressView() }
                             }
                         }
                         .disabled(code.trimmingCharacters(in: .whitespaces).isEmpty || pairing)
                     } header: {
-                        Text("Código del módulo")
+                        Text(t.pairCode)
                     } footer: {
-                        Text("Lo da el script de alta (scripts/crear-dispositivo.mjs).")
+                        Text(t.pairFooter)
                     }
                 } else {
-                    Section("Estado") {
-                        LabeledContent("Conexión", value: store.moduleOnline ? "Online" : "Offline")
-                        LabeledContent("Sonda", value: store.probeMissing ? "Desconectada" : "Conectada")
+                    Section(t.status) {
+                        LabeledContent(t.connection, value: store.moduleOnline ? "Online" : "Offline")
+                        LabeledContent(t.probe, value: store.probeMissing ? t.probeDisconnected : t.probeConnected)
                         if let date = store.status?.measuredDate {
-                            LabeledContent("Última lectura", value: date.formatted(date: .omitted, time: .standard))
+                            LabeledContent(
+                                t.lastReading,
+                                value: date.formatted(.dateTime.hour().minute().second().locale(store.lang.locale))
+                            )
                         }
                     }
                     Section {
-                        Button("Desvincular este módulo", role: .destructive) { store.unpair() }
+                        Button(t.unpair, role: .destructive) { store.unpair() }
                     }
                 }
 
                 Section {
-                    LabeledContent("Unidad", value: "°C")
-                    Button("Permitir avisos") { Notifier.shared.requestAuthorization() }
+                    Picker(t.language, selection: $store.lang) {
+                        Text("Español").tag(Lang.es)
+                        Text("English").tag(Lang.en)
+                    }
+                    .pickerStyle(.segmented)
                 } header: {
-                    Text("Avisos")
+                    Text(t.language)
+                }
+
+                Section {
+                    LabeledContent(t.unit, value: "°C")
+                    Button(t.allowAlerts) { Notifier.shared.requestAuthorization() }
+                } header: {
+                    Text(t.alerts)
                 } footer: {
-                    Text("El iPhone avisa con la app abierta o recién minimizada y deja la pantalla encendida durante la cocción. Para avisos con la app cerrada usá la web instalada en el inicio.")
+                    Text(t.alertsFooter)
                 }
             }
-            .navigationTitle("Cuenta")
+            .navigationTitle(t.account)
         }
     }
 }

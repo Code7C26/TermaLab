@@ -5,22 +5,23 @@ import SwiftUI
 struct HistoryChart: View {
     let points: [HistoryPoint]
     let target: Double
+    let strings: Strings
 
     var body: some View {
         Chart {
             ForEach(points.filter { $0.temperature != nil }) { point in
                 LineMark(
-                    x: .value("Hora", point.date),
+                    x: .value(strings.chartTime, point.date),
                     y: .value("°C", point.temperature ?? 0)
                 )
                 .interpolationMethod(.monotone)
-                .foregroundStyle(Color.brandOrange)
+                .foregroundStyle(Color.ink)
             }
-            RuleMark(y: .value("Objetivo", target))
+            RuleMark(y: .value(strings.target, target))
                 .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
-                .foregroundStyle(Color.brandNavy.opacity(0.6))
+                .foregroundStyle(Color.secondary)
                 .annotation(position: .top, alignment: .leading) {
-                    Text("Objetivo \(Int(target)) °C")
+                    Text(strings.chartTarget(Int(target)))
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }

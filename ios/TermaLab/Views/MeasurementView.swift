@@ -3,33 +3,33 @@ import SwiftUI
 struct MeasurementView: View {
     @Environment(CookingStore.self) private var store
 
+    private var t: Strings { store.t }
+
     private var stateLabel: (String, Color) {
-        if store.probeMissing { return ("Sonda desconectada", .brandRed) }
-        guard let temperature = store.temperature else { return ("Sin lectura", .secondary) }
+        if store.probeMissing { return (t.probeMissing, .brandRed) }
+        guard let temperature = store.temperature else { return (t.noReading, .secondary) }
         switch Temperature.state(temperature, target: store.target) {
-        case .heating: return ("Cocinando", .brandOrange)
-        case .ready: return ("Está listo", .brandGreen)
-        case .high: return ("Por encima", .brandRed)
+        case .heating: return (t.heating, .secondary)
+        case .ready: return (t.ready, .ink)
+        case .high: return (t.high, .brandRed)
         }
     }
 
     private var message: (String, String) {
-        if store.reached { return ("¡Llegó al objetivo!", "Podés retirar la preparación.") }
+        if store.reached { return (t.goalReached, t.takeItOut) }
         if !store.isDemo && !(store.status?.connected ?? false) {
-            return ("Esperando al módulo", "Revisá que esté enchufado y con Wi‑Fi.")
+            return (t.waitingModule, t.checkModule)
         }
         let remaining = store.target - (store.temperature ?? store.startTemperature)
-        let title = remaining > Temperature.tolerance
-            ? String(format: "Faltan %.1f °C", remaining)
-            : "Objetivo alcanzado"
-        return (title, store.active ? "Te avisamos cuando esté lista." : "Elegí el objetivo y empezá.")
+        let title = remaining > Temperature.tolerance ? t.remaining(remaining) : t.targetReached
+        return (title, store.active ? t.weWillNotify : t.chooseTarget)
     }
 
     private var buttonTitle: String {
         if store.isDemo {
-            return store.active ? "Detener medición" : (store.reached ? "Medir de nuevo" : "Iniciar demostración")
+            return store.active ? t.stopMeasurement : (store.reached ? t.measureAgain : t.startDemo)
         }
-        return store.active ? (store.reached ? "Terminar cocción" : "Detener cocción") : "Empezar cocción"
+        return store.active ? (store.reached ? t.finishCooking : t.stopCooking) : t.startCooking
     }
 
     var body: some View {
@@ -42,18 +42,19 @@ struct MeasurementView: View {
                         temperature: store.temperature,
                         target: store.target,
                         label: stateLabel.0,
-                        labelColor: stateLabel.1
+                        labelColor: stateLabel.1,
+                        strings: t
                     )
                     .padding(.vertical, 8)
 
                     VStack(spacing: 4) {
-                        Text(message.0).font(.headline).foregroundStyle(Color.brandNavy)
+                        Text(message.0).font(.body.weight(.medium)).foregroundStyle(Color.ink)
                         Text(message.1).font(.footnote).foregroundStyle(.secondary)
                         if store.active || store.elapsed > 0 {
-                            Text("Tiempo transcurrido · \(Temperature.elapsedText(store.elapsed))")
-                                .font(.footnote.weight(.bold))
+                            Text("\(t.elapsed) · \(Temperature.elapsedText(store.elapsed))")
+                                .font(.footnote)
                                 .monospacedDigit()
-                                .foregroundStyle(Color.brandCyan)
+                                .foregroundStyle(.secondary)
                         }
                     }
                     .multilineTextAlignment(.center)
@@ -62,22 +63,22 @@ struct MeasurementView: View {
 
                     Button { store.toggleCooking() } label: {
                         Text(buttonTitle)
-                            .font(.headline)
+                            .font(.body.weight(.medium))
                             .frame(maxWidth: .infinity, minHeight: 52)
+                            .foregroundStyle(store.active ? Color.ink : Color(uiColor: .systemBackground))
+                            .background(store.active ? Color.clear : Color.ink, in: RoundedRectangle(cornerRadius: 14))
+                            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.ink, lineWidth: 1))
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(store.active ? Color.gray.opacity(0.25) : Color.brandNavy)
-                    .foregroundStyle(store.active ? Color.brandNavy : .white)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .buttonStyle(.plain)
                     .disabled(store.busy)
 
                     if !store.isDemo && store.history.count > 1 {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Última hora").font(.subheadline.weight(.bold)).foregroundStyle(Color.brandNavy)
-                            HistoryChart(points: store.history, target: store.target)
+                            Text(t.lastHour).font(.subheadline.weight(.medium)).foregroundStyle(Color.ink)
+                            HistoryChart(points: store.history, target: store.target, strings: t)
                         }
                         .padding(16)
-                        .background(Color.surfaceSoft, in: RoundedRectangle(cornerRadius: 18))
+                        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.line, lineWidth: 1))
                     }
                 }
                 .padding(.horizontal, 22)
@@ -95,13 +96,13 @@ struct MeasurementView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(store.isDemo ? "TERMALAB COCINA · DEMO" : store.deviceName.uppercased())
-                .font(.caption.weight(.heavy))
+            Text(store.isDemo ? t.demoHeader : store.deviceName.uppercased())
+                .font(.caption.weight(.medium))
                 .tracking(1)
-                .foregroundStyle(Color.brandCyan)
-            Text("Tu comida, en el punto justo.")
-                .font(.system(size: 30, weight: .heavy))
-                .foregroundStyle(Color.brandNavy)
+                .foregroundStyle(.secondary)
+            Text(t.headline)
+                .font(.system(size: 26, weight: .semibold))
+                .foregroundStyle(Color.ink)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.top, 8)
@@ -113,14 +114,15 @@ struct MeasurementView: View {
                 Button {
                     store.selectPreset(preset)
                 } label: {
-                    Text("\(preset.emoji) \(preset.label)")
-                        .font(.footnote.weight(.semibold))
+                    Text(t.presets[preset.id] ?? preset.label)
+                        .font(.footnote.weight(.medium))
                         .frame(maxWidth: .infinity, minHeight: 42)
-                        .background(
-                            store.presetId == preset.id ? Color.brandCyan.opacity(0.12) : Color.surfaceSoft,
-                            in: RoundedRectangle(cornerRadius: 14)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(store.presetId == preset.id ? Color.ink : Color.line, lineWidth: 1)
                         )
-                        .foregroundStyle(store.presetId == preset.id ? Color.brandNavy : .secondary)
+                        .foregroundStyle(store.presetId == preset.id ? Color.ink : .secondary)
+                        .contentShape(RoundedRectangle(cornerRadius: 12))
                 }
                 .buttonStyle(.plain)
             }
@@ -129,43 +131,46 @@ struct MeasurementView: View {
 
     private var targetControl: some View {
         HStack {
-            Text("Objetivo").font(.subheadline.weight(.medium)).foregroundStyle(.secondary)
+            Text(t.target).font(.subheadline.weight(.medium)).foregroundStyle(.secondary)
             Spacer()
             Button { store.changeTarget(by: -1) } label: {
-                Image(systemName: "minus").frame(width: 36, height: 36)
+                Image(systemName: "minus")
+                    .frame(width: 36, height: 36)
+                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.line, lineWidth: 1))
+                    .contentShape(Rectangle())
             }
-            .buttonStyle(.bordered)
-            .accessibilityLabel("Bajar temperatura objetivo")
+            .buttonStyle(.plain)
+            .accessibilityLabel(t.targetDown)
             Text("\(Int(store.target)) °C")
-                .font(.headline)
+                .font(.body.weight(.medium))
                 .monospacedDigit()
                 .frame(minWidth: 64)
-                .foregroundStyle(Color.brandNavy)
+                .foregroundStyle(Color.ink)
             Button { store.changeTarget(by: 1) } label: {
-                Image(systemName: "plus").frame(width: 36, height: 36)
+                Image(systemName: "plus")
+                    .frame(width: 36, height: 36)
+                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.line, lineWidth: 1))
+                    .contentShape(Rectangle())
             }
-            .buttonStyle(.bordered)
-            .accessibilityLabel("Subir temperatura objetivo")
+            .buttonStyle(.plain)
+            .accessibilityLabel(t.targetUp)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
-        .background(Color.surfaceSoft, in: RoundedRectangle(cornerRadius: 18))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.line, lineWidth: 1))
     }
 
     private var statusBadge: some View {
         let (text, color): (String, Color) = {
-            if store.isDemo { return ("Demo", .orange) }
-            if !store.reachable { return ("Sin internet", .brandRed) }
-            if !(store.status?.connected ?? false) { return ("Apagado", .brandRed) }
-            if store.probeMissing { return ("Sonda", .orange) }
-            return ("Online", .brandGreen)
+            if store.isDemo { return (t.badgeDemo, .secondary) }
+            if !store.reachable { return (t.badgeNoInternet, .brandRed) }
+            if !(store.status?.connected ?? false) { return (t.badgeOff, .brandRed) }
+            if store.probeMissing { return (t.badgeProbe, .brandRed) }
+            return ("Online", .ink)
         }()
         return HStack(spacing: 5) {
-            Circle().fill(color).frame(width: 7, height: 7)
-            Text(text).font(.caption2.weight(.bold)).foregroundStyle(.secondary)
+            Circle().fill(color).frame(width: 6, height: 6)
+            Text(text).font(.caption2.weight(.medium)).foregroundStyle(.secondary)
         }
-        .padding(.horizontal, 9)
-        .padding(.vertical, 5)
-        .background(Color.surfaceSoft, in: Capsule())
     }
 }

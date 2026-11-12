@@ -17,6 +17,9 @@ posterior**. Alcanza con un Apple ID común (cuenta gratis).
 3. En **Team** elegí tu Apple ID (si no aparece: *Add an Account…*).
    Si Xcode dice que el *Bundle Identifier* ya existe, cambialo por algo
    único, por ejemplo `ar.termalab.cocina.tunombre`.
+   Repetí el paso con el target **TermaLabWidgetsExtension** (la actividad en
+   vivo): mismo Team, y su identificador tiene que ser el de la app más
+   `.widgets`, por ejemplo `ar.termalab.cocina.tunombre.widgets`.
 4. Conectá el iPhone por cable, desbloquealo y aceptá *Confiar en esta
    computadora*.
 5. Arriba, elegí tu iPhone como destino y tocá **▶ Run**.
@@ -38,28 +41,42 @@ Program (USD 99 por año).
 3. Pestaña **Medición**: elegí carne, pollo, pan o un objetivo propio y tocá
    **Empezar cocción**.
 
-## Avisos
+## Actividad en vivo y avisos
 
-- Con la app abierta o recién minimizada, el iPhone muestra el aviso, suena y
-  vibra al llegar al objetivo.
-- Durante la cocción la pantalla no se apaga, para que el celular pueda quedar
-  en la mesada con la app abierta.
-- Con la app **cerrada**, iOS no deja que la app consulte al servidor, y los
-  avisos remotos (APNs) requieren la cuenta paga de Apple. Para ese caso usá la
-  **web instalada en el inicio**, que sí recibe avisos push con la app
-  cerrada. Igual, el buzzer del módulo suena siempre.
+- Al empezar una cocción aparece una **actividad en vivo** en la pantalla
+  bloqueada y en la Dynamic Island: temperatura actual, objetivo, avance y
+  tiempo transcurrido. La primera vez iOS pregunta si se permiten las
+  actividades en vivo de TermaLab.
+- Al llegar al objetivo el iPhone muestra el aviso, suena y vibra, también
+  **con el celular bloqueado** o con otra app abierta.
+- Para lograrlo sin la cuenta paga de Apple, durante la cocción la app sigue
+  activa en segundo plano reproduciendo audio en silencio
+  (`BackgroundKeeper.swift`). Se apaga sola al llegar al objetivo o al
+  terminar la cocción. Mientras dura gasta algo más de batería.
+- Límites: si cerrás la app deslizándola hacia arriba, o si entra una llamada
+  durante la cocción, la app deja de consultar y la actividad queda marcada
+  como apagada. En ese caso avisan la **web instalada en el inicio** (avisos
+  push) y el buzzer del módulo, que suena siempre.
+- Los avisos remotos de Apple (APNs), que funcionan con la app cerrada del
+  todo, requieren el Apple Developer Program.
 
 ## Archivos
 
 ```text
 ios/
 ├── TermaLab.xcodeproj        proyecto (las carpetas se sincronizan solas)
+├── TermaLab-Info.plist        actividades en vivo y audio en segundo plano
+├── TermaLabWidgets-Info.plist datos de la extensión de widgets
+├── Shared/                    datos de la actividad (app y extensión)
+├── TermaLabWidgets/           extensión: vista de pantalla bloqueada y Dynamic Island
 └── TermaLab/
     ├── TermaLabApp.swift      entrada, pestañas y colores de la marca
     ├── CookingStore.swift     estado, consulta al servidor cada 2 s, demo
     ├── APIClient.swift        llamadas a /api/v1
     ├── Models.swift           tipos, presets y cálculos de temperatura
     ├── Notifier.swift         avisos locales
+    ├── LiveActivity.swift     inicia, actualiza y termina la actividad en vivo
+    ├── BackgroundKeeper.swift mantiene la app activa durante la cocción
     ├── Views/                 Medición, Cuenta, medidor y gráfico
     └── Assets.xcassets        ícono, color y logo
 ```

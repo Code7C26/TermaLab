@@ -10,6 +10,10 @@ final class CookingStore {
     // MARK: configuración guardada
     var serverAddress: String
     private(set) var pairing: Pairing?
+    var lang: Lang {
+        didSet { UserDefaults.standard.set(lang.rawValue, forKey: Keys.lang) }
+    }
+    var t: Strings { lang.strings }
 
     // MARK: estado visible
     var presetId: String = Preset.all[0].id
@@ -35,10 +39,12 @@ final class CookingStore {
     private enum Keys {
         static let server = "termalab.server"
         static let pairing = "termalab.pairing"
+        static let lang = "termalab.lang"
     }
 
     init() {
         serverAddress = UserDefaults.standard.string(forKey: Keys.server) ?? ""
+        lang = Lang(rawValue: UserDefaults.standard.string(forKey: Keys.lang) ?? "") ?? .es
         if let data = UserDefaults.standard.data(forKey: Keys.pairing) {
             pairing = try? JSONDecoder().decode(Pairing.self, from: data)
         }
@@ -77,7 +83,7 @@ final class CookingStore {
         guard active, let started = status?.startedDate else { return 0 }
         return now.timeIntervalSince(started)
     }
-    var deviceName: String { status?.deviceName ?? pairing?.name ?? "Módulo central" }
+    var deviceName: String { status?.deviceName ?? pairing?.name ?? t.defaultModuleName }
 
     private var client: APIClient? {
         guard let pairing, let url = URL(string: serverAddress.trimmingCharacters(in: .whitespaces)),
@@ -103,7 +109,7 @@ final class CookingStore {
         case .active:
             startPolling()
         case .background:
-            // iOS suspende la app al rato; el aviso local sale si llega antes.
+            // Durante una cocción BackgroundKeeper mantiene la app activa y la consulta sigue.
             break
         default:
             break
@@ -114,9 +120,13 @@ final class CookingStore {
         now = Date()
         if isDemo {
             tickDemo()
+            syncLive()
             return
         }
-        guard let client else { return }
+        guard let client else {
+            syncLive()
+            return
+        }
         do {
             let next = try await client.status()
             status = next
@@ -128,18 +138,45 @@ final class CookingStore {
                 history = (try? await client.history(minutes: 60)) ?? history
             }
         } catch let error as APIError where error.status == 401 || error.status == 404 {
-            errorMessage = "El módulo ya no acepta este código. Volvé a vincularlo."
+            errorMessage = t.codeRevoked
             unpair()
         } catch {
             reachable = false
         }
         updateIdleTimer()
+        syncLive()
+    }
+
+    /// Actividad en vivo y funcionamiento en segundo plano mientras dura la cocción.
+    private func syncLive() {
+        if active && !reached {
+            BackgroundKeeper.shared.start()
+        } else {
+            BackgroundKeeper.shared.stop()
+        }
+        let state = CookingActivityAttributes.ContentState(
+            temperature: temperature,
+            target: target,
+            reached: reached,
+            online: moduleOnline && !probeMissing
+        )
+        LiveActivityController.shared.sync(show: active, keepFinal: reached, state: state) {
+            CookingActivityAttributes(
+                deviceName: self.isDemo ? self.t.demoMode : self.deviceName,
+                startedAt: (self.isDemo ? self.demoStartedAt : self.status?.startedDate) ?? Date(),
+                startTemperature: self.startTemperature,
+                labelTarget: self.t.target,
+                labelReady: self.t.goalReached,
+                labelCooking: self.t.heating,
+                labelOffline: self.t.badgeOff
+            )
+        }
     }
 
     private func checkReached(_ status: DeviceStatus) {
         guard status.active, status.reached, let at = status.reachedAt, at != announcedReachedAt else { return }
         announcedReachedAt = at
-        Notifier.shared.goalReached(temperature: status.temperature ?? status.target, target: status.target)
+        Notifier.shared.goalReached(temperature: status.temperature ?? status.target, target: status.target, strings: t)
     }
 
     private func updateIdleTimer() {
@@ -175,7 +212,7 @@ final class CookingStore {
             return
         }
         guard let client else {
-            errorMessage = "Configurá la dirección del servidor en Cuenta."
+            errorMessage = t.configureServer
             return
         }
         busy = true
@@ -187,8 +224,11 @@ final class CookingStore {
                 status = try await client.session(action, target: value)
                 reachable = true
                 updateIdleTimer()
+                syncLive()
+            } catch let error as APIError where error.status > 0 {
+                errorMessage = t.requestFailed(error.status)
             } catch {
-                errorMessage = error.localizedDescription
+                errorMessage = t.serverUnreachable
             }
         }
     }
@@ -197,13 +237,13 @@ final class CookingStore {
     func pair(code: String) async -> Bool {
         saveServerAddress()
         guard let parsed = Pairing.parse(code) else {
-            errorMessage = "El código tiene la forma abc123-ABCD-EFGH."
+            errorMessage = t.pairFormat
             return false
         }
         guard let url = URL(string: serverAddress.trimmingCharacters(in: .whitespaces)),
               url.scheme?.hasPrefix("http") == true
         else {
-            errorMessage = "Primero escribí la dirección del servidor (https://…)."
+            errorMessage = t.serverMissing
             return false
         }
         let candidate = Pairing(id: parsed.id, key: parsed.key, name: "")
@@ -218,9 +258,9 @@ final class CookingStore {
             startPolling()
             return true
         } catch let error as APIError where error.status == 401 || error.status == 404 {
-            errorMessage = "Código incorrecto. Revisalo y probá de nuevo."
+            errorMessage = t.pairWrong
         } catch {
-            errorMessage = "No se pudo conectar con el servidor."
+            errorMessage = t.serverUnreachable
         }
         return false
     }
@@ -230,6 +270,7 @@ final class CookingStore {
         status = nil
         history = []
         UIApplication.shared.isIdleTimerDisabled = false
+        syncLive()
         startPolling()
     }
 
@@ -257,7 +298,7 @@ final class CookingStore {
         if demoTemperature >= target - Temperature.tolerance {
             demoReached = true
             demoRunning = false
-            Notifier.shared.goalReached(temperature: demoTemperature, target: target)
+            Notifier.shared.goalReached(temperature: demoTemperature, target: target, strings: t)
         }
         updateIdleTimer()
     }

@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import UserNotifications
 
-/// Avisos locales: suenan con la app abierta o recién minimizada.
-/// (Los avisos con la app cerrada necesitan la cuenta paga de Apple para APNs;
-/// mientras tanto los da la web instalable.)
+/// Avisos locales. Durante una cocción la app sigue activa en segundo plano
+/// (ver BackgroundKeeper), así que el aviso llega también con el iPhone bloqueado.
+/// Los avisos remotos (APNs) necesitan la cuenta paga de Apple.
 final class Notifier: NSObject, UNUserNotificationCenterDelegate {
     static let shared = Notifier()
 
@@ -16,11 +16,11 @@ final class Notifier: NSObject, UNUserNotificationCenterDelegate {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
     }
 
-    func goalReached(temperature: Double, target: Double) {
+    func goalReached(temperature: Double, target: Double, strings: Strings) {
         UINotificationFeedbackGenerator().notificationOccurred(.success)
         let content = UNMutableNotificationContent()
-        content.title = "¡Está listo! 🍽️"
-        content.body = String(format: "La sonda marca %.1f °C (objetivo %.0f °C).", temperature, target)
+        content.title = strings.notificationTitle
+        content.body = strings.notificationBody(temperature, target)
         content.sound = .default
         let request = UNNotificationRequest(identifier: "termalab-goal", content: content, trigger: nil)
         UNUserNotificationCenter.current().add(request)

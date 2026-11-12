@@ -13,7 +13,8 @@ struct TermaLabApp: App {
         WindowGroup {
             ContentView()
                 .environment(store)
-                .tint(.brandCyan)
+                .environment(\.locale, store.lang.locale)
+                .tint(.ink)
         }
         .onChange(of: scenePhase) { _, phase in
             store.scenePhaseChanged(phase)
@@ -27,9 +28,9 @@ struct ContentView: View {
     var body: some View {
         TabView {
             MeasurementView()
-                .tabItem { Label("Medición", systemImage: "thermometer.medium") }
+                .tabItem { Label(store.t.tabMeasurement, systemImage: "thermometer.medium") }
             AccountView()
-                .tabItem { Label("Cuenta", systemImage: "person.crop.circle") }
+                .tabItem { Label(store.t.tabAccount, systemImage: "person.crop.circle") }
         }
         .alert("TermaLab", isPresented: Binding(
             get: { store.errorMessage != nil },
@@ -42,11 +43,10 @@ struct ContentView: View {
     }
 }
 
+/// Paleta mínima: tinta, grises del sistema y un único rojo para errores.
 extension Color {
-    static let brandNavy = Color(red: 6 / 255, green: 43 / 255, blue: 85 / 255)
-    static let brandCyan = Color(red: 5 / 255, green: 188 / 255, blue: 199 / 255)
-    static let brandOrange = Color(red: 1, green: 107 / 255, blue: 44 / 255)
-    static let brandRed = Color(red: 233 / 255, green: 64 / 255, blue: 64 / 255)
-    static let brandGreen = Color(red: 21 / 255, green: 145 / 255, blue: 95 / 255)
-    static let surfaceSoft = Color(red: 246 / 255, green: 248 / 255, blue: 251 / 255)
+    static let ink = Color.primary
+    static let brandRed = Color(red: 192 / 255, green: 57 / 255, blue: 43 / 255)
+    static let line = Color(uiColor: .systemGray5)
+    static let surfaceSoft = Color(uiColor: .secondarySystemBackground)
 }
