@@ -1,0 +1,22 @@
+✔ rechaza claves incorrectas (317.3739ms)
+✔ el código de vinculación acepta guiones y minúsculas (11.6563ms)
+✔ flujo completo: lectura, cocción, objetivo y alarma (68.9055ms)
+✔ sonda desconectada y valores inválidos (21.0017ms)
+✔ desconectado cuando pasan más de 20 s sin lecturas (9.3548ms)
+✔ historial cada 15 s y filtrado por minutos (94.2635ms)
+✔ suscripción push y aviso al llegar al objetivo (94.3776ms)
+✔ cifrado aes128gcm: el navegador puede descifrarlo (RFC 8291) (21.2351ms)
+✔ JWT VAPID firmado con ES256 y verificable con la clave pública (31.3463ms)
+✔ clasifica una cocción debajo, en y encima del objetivo (7.3482ms)
+✔ calcula el avance entre el inicio y el objetivo (3.622ms)
+✔ ubica el indicador entre el extremo frío y el caliente (1.0538ms)
+✔ formatea el tiempo transcurrido de una medición (1.354ms)
+✔ la simulación avanza sin superar el objetivo (2.8502ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1315.2984
