@@ -2,9 +2,11 @@
 
 TermaLab Cocina es un termómetro conectado para horno. Una sonda permanece en el alimento durante la cocción, el módulo central queda fuera del horno y la aplicación permite consultar la temperatura y recibir alertas desde cualquier lugar.
 
-**Probar la app:** URL_PUBLICA_TERMALAB (sin módulo vinculado abre en modo demostración).
+**Probar la app:** [termalab.termalab-cocina.workers.dev](https://termalab.termalab-cocina.workers.dev/) (sin módulo vinculado abre en modo demostración).
 
 **Manual de usuario:** [`docs/MANUAL_DE_USUARIO.md`](docs/MANUAL_DE_USUARIO.md)
+
+**Presentación final:** [`entregables/`](entregables/) (pitch, guion, kit de impresión y evidencias)
 
 ![Carcasa v0.5 del módulo central](design/modelos%203d/termalab-carcasa-v0.5-vistas.png)
 
@@ -40,18 +42,22 @@ Disponible:
 - API con lecturas reales, historial de 3 días, sesión de cocción con objetivo y alarma (`/api/v1`).
 - Alta de módulos con clave propia para la ESP32 y código de vinculación para las apps (en la base solo se guardan hashes).
 - Notificaciones push web (VAPID) cuando la comida llega al objetivo, también con la app cerrada.
-- Web instalable (PWA) con ícono, pantalla completa, vinculación de módulo y modo demostración.
+- Web instalable (PWA) con ícono, pantalla completa, vinculación de módulo y modo demostración, publicada en [termalab.termalab-cocina.workers.dev](https://termalab.termalab-cocina.workers.dev/).
 - Web en español e inglés. Los avisos push llegan en el idioma elegido en cada celular.
 - Módulo ESP32 funcionando con la sonda: manda lecturas reales al servidor.
 - Carcasa v0.4 para ESP32 + MAX6675, impresa y probada; la tapa tiene un reborde que une el labio con las paredes (`design/modelos 3d/`).
 - Carcasa v0.5: tapa nueva con pulsador táctil de 12 × 12 mm y el logo grabado.
 - 14 pruebas automáticas (lógica de temperatura, API sobre SQLite y cifrado push).
+- Material de la presentación final: pitch, guion, kit de impresión y evidencias (`entregables/`).
 
 Pendiente:
 
 - Ajustes finales de la carcasa a partir de la primera impresión.
 - Validar precisión con un termómetro de referencia (hielo, agua hirviendo, cocción real). Protocolo y planilla en [`docs/PRUEBAS_DE_PRECISION.md`](docs/PRUEBAS_DE_PRECISION.md).
 - Validar la sonda y el cable para uso continuo dentro del horno.
+- Validar el certificado del servidor en el firmware: hoy la conexión va cifrada, pero usa `setInsecure`.
+- Probar el producto con usuarios: la encuesta está preparada y falta juntar respuestas y hacer un piloto.
+- Validar con compradores el precio propuesto: $44.990 (materiales $33.000).
 - Publicar una app nativa en las tiendas.
 
 Experimental, fuera del producto:
@@ -59,6 +65,26 @@ Experimental, fuera del producto:
 - Prototipo de app nativa para iPhone en SwiftUI (`ios/`), con actividad en vivo en la pantalla bloqueada. Funciona, pero no se distribuye: instalarla requiere una Mac con Xcode, y publicarla en el App Store requiere el Apple Developer Program. El producto para el usuario es la web instalable.
 
 > La carcasa impresa debe quedar alejada de las superficies calientes y se considera un prototipo.
+
+## Presentación final
+
+Todo el material del pitch está en [`entregables/`](entregables/). Conviene empezar por [`LEER_PRIMERO.md`](entregables/LEER_PRIMERO.md).
+
+| Archivo | Para qué |
+|---|---|
+| [`Pitch_Final_TermaLab.pptx`](entregables/Pitch_Final_TermaLab.pptx) | Presentación de 15 diapositivas con notas del orador: tiempo, quién habla y qué decir (25 min + 5 de preguntas) |
+| [`Pitch_Final_TermaLab.pdf`](entregables/Pitch_Final_TermaLab.pdf) | La misma presentación, para proyectar desde cualquier computadora |
+| [`fuentes/`](entregables/fuentes/) | Tipografía DM Sans (licencia OFL): instalarla en la compu donde se abra el pptx |
+| [`Guion_y_plan_TermaLab.docx`](entregables/Guion_y_plan_TermaLab.docx) | Guion, reparto, demo, preguntas del jurado y plan de validación |
+| [`Kit_impresion_TermaLab.pdf`](entregables/Kit_impresion_TermaLab.pdf) | Flyer, stickers, credenciales y resumen ejecutivo |
+| [`Textos_y_guiones_difusion.md`](entregables/Textos_y_guiones_difusion.md) | Guiones de video y textos para redes |
+| [`evidencias/`](entregables/evidencias/) | Salida de las pruebas automáticas y respuesta de la demo pública |
+| [`anterior/`](entregables/anterior/) | Versión anterior del pitch (v3), como historial |
+
+| Probar la app | Código y documentación |
+|:---:|:---:|
+| <img src="entregables/QR_app.png" alt="QR de la web de TermaLab" width="160"> | <img src="assets/images/branding/qr-repositorio-termalab.png" alt="QR del repositorio" width="160"> |
+| [termalab.termalab-cocina.workers.dev](https://termalab.termalab-cocina.workers.dev/) | [github.com/Code7C26/TermaLab](https://github.com/Code7C26/TermaLab) |
 
 ## Puesta en marcha
 
@@ -134,15 +160,16 @@ pnpm test:rendered
 ## Estructura principal
 
 ```text
-├── app/        Web + servidor (Next.js 16, Vinext, Cloudflare Workers, D1)
+├── app/          Web + servidor (Next.js 16, Vinext, Cloudflare Workers, D1)
 │   ├── migrations/   esquema de la base
 │   ├── scripts/      alta de módulos y claves push
 │   └── src/          interfaz, API (lib/server), cliente (lib/client), pruebas
-├── firmware/   Programa del ESP32 (PlatformIO)
-├── ios/        Prototipo experimental de app nativa para iPhone (SwiftUI)
-├── assets/     Imágenes, íconos, manifest y service worker
-├── design/     Prototipos y modelos 3D de la carcasa
-├── docs/       Documentación, análisis y presentaciones
+├── firmware/     Programa del ESP32 (PlatformIO)
+├── ios/          Prototipo experimental de app nativa para iPhone (SwiftUI)
+├── assets/       Imágenes, íconos, manifest y service worker
+├── design/       Prototipos y modelos 3D de la carcasa
+├── docs/         Documentación, análisis y presentaciones anteriores
+├── entregables/  Presentación final: pitch, guion, kit de impresión y evidencias
 └── README.md
 ```
 
@@ -156,7 +183,9 @@ pnpm test:rendered
 | [`firmware/README.md`](firmware/README.md) | Conexiones, carga del programa y señales del módulo |
 | [`ios/README.md`](ios/README.md) | Prototipo experimental de app nativa para iPhone |
 | [`design/modelos 3d/`](design/modelos%203d/) | Carcasa: modelos, medidas, impresión y armado |
+| [`entregables/`](entregables/) | Presentación final, guion, kit de impresión y evidencias |
 | [`docs/`](docs/) | Análisis previos: Bluetooth vs Wi‑Fi, comparación de sensores, FODA, product backlog, roles y encuesta |
+| [`docs/presentaciones/`](docs/presentaciones/) y [`docs/archivo/`](docs/archivo/) | Presentaciones y README de etapas anteriores, guardados como historial |
 
 ## Equipo
 
