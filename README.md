@@ -48,12 +48,13 @@ Disponible:
 - Carcasa v0.4 para ESP32 + MAX6675, impresa y probada; la tapa tiene un reborde que une el labio con las paredes (`design/modelos 3d/`).
 - Carcasa v0.5: tapa nueva con pulsador táctil de 12 × 12 mm y el logo grabado.
 - 14 pruebas automáticas (lógica de temperatura, API sobre SQLite y cifrado push).
+- Precisión medida en dos puntos: 1,2 °C en hielo (esperado 0 °C) y 98,5 °C en agua hirviendo (esperado 100 °C), dentro de ±2 °C. Detalle en [`docs/PRUEBAS_DE_PRECISION.md`](docs/PRUEBAS_DE_PRECISION.md).
 - Material de la presentación final: pitch, guion, kit de impresión y evidencias (`entregables/`).
 
 Pendiente:
 
 - Ajustes finales de la carcasa a partir de la primera impresión.
-- Validar precisión con un termómetro de referencia (hielo, agua hirviendo, cocción real). Protocolo y planilla en [`docs/PRUEBAS_DE_PRECISION.md`](docs/PRUEBAS_DE_PRECISION.md).
+- Probar la precisión en una cocción real (hielo y agua hirviendo ya están medidos). Protocolo en [`docs/PRUEBAS_DE_PRECISION.md`](docs/PRUEBAS_DE_PRECISION.md).
 - Validar la sonda y el cable para uso continuo dentro del horno.
 - Validar el certificado del servidor en el firmware: hoy la conexión va cifrada, pero usa `setInsecure`.
 - Probar el producto con usuarios: la encuesta está preparada y falta juntar respuestas y hacer un piloto.
@@ -179,7 +180,7 @@ pnpm test:rendered
 |---|---|
 | [`docs/MANUAL_DE_USUARIO.md`](docs/MANUAL_DE_USUARIO.md) | Cómo configurar y usar el producto |
 | [`docs/ARQUITECTURA_COCINA.md`](docs/ARQUITECTURA_COCINA.md) | Arquitectura, decisiones y etapas |
-| [`docs/PRUEBAS_DE_PRECISION.md`](docs/PRUEBAS_DE_PRECISION.md) | Protocolo y resultados de las pruebas con termómetro de referencia |
+| [`docs/PRUEBAS_DE_PRECISION.md`](docs/PRUEBAS_DE_PRECISION.md) | Protocolo y resultados de las pruebas de precisión |
 | [`firmware/README.md`](firmware/README.md) | Conexiones, carga del programa y señales del módulo |
 | [`ios/README.md`](ios/README.md) | Prototipo experimental de app nativa para iPhone |
 | [`design/modelos 3d/`](design/modelos%203d/) | Carcasa: modelos, medidas, impresión y armado |

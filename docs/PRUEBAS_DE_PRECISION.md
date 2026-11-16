@@ -43,19 +43,23 @@ desciende cerca de 1 °C cada 300 m. Anotar la altura del lugar de la prueba.
 
 ## Resultados
 
-Fecha de la prueba:
-Termómetro de referencia:
-Lugar y altura:
+Fecha de la prueba: noviembre de 2026.
+Referencia: el valor esperado de cada punto (0 °C en hielo y 100 °C en agua
+hirviendo).
+Lugar y altura: Córdoba, unos 390 m.
 
 | Prueba | Referencia (°C) | TermaLab (°C) | Diferencia (°C) | ¿Dentro de ±2 °C? |
 |---|---|---|---|---|
-| Hielo | | | | |
-| Agua hirviendo | | | | |
-| Cocción, minuto 10 | | | | |
-| Cocción, minuto 20 | | | | |
-| Cocción, al aviso | | | | |
+| Hielo | 0 | 1,2 | +1,2 | Sí |
+| Agua hirviendo | 100 | 98,5 | −1,5 | Sí |
+| Cocción real | | | | No realizada |
 
 ## Conclusiones
 
-Completar después de la prueba: error máximo medido, si hace falta corregir la
-lectura con un ajuste fijo y cualquier comportamiento raro de la sonda.
+- Error máximo medido: 1,5 °C, en agua hirviendo. Los dos puntos cumplen el
+  criterio de ±2 °C.
+- Se tomó 100 °C como referencia del agua hirviendo. A unos 390 m el agua
+  hierve cerca de 98,7 °C, así que la diferencia real en ese punto es menor.
+- No conviene corregir la lectura con un ajuste fijo: las dos diferencias van
+  en sentidos opuestos.
+- Falta la prueba en una cocción real.

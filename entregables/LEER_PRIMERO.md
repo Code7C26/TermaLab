@@ -11,6 +11,6 @@ Preparado el 12 de noviembre de 2026 y actualizado el 13 de noviembre. Abrir pri
 
 Reparto: cada uno presenta lo que hizo según los roles del README (Oreste, Scrum Master y desarrollo; Julián, investigación y diseño). Presupuesto: materiales $33.000, precio propuesto $44.990 (27 % de margen), precios de Mercado Libre del 12/11/2026.
 
-Pendientes reales: ensayar la demo con el hardware, medir la precisión con un termómetro de referencia (docs/PRUEBAS_DE_PRECISION.md) y cargar los resultados en la diapositiva 9, validar sonda y cable para uso continuo en horno, comprobar la llegada del aviso push a un teléfono real, conseguir respuestas de la encuesta, grabar los videos y preparar las redes. No publicar credenciales ni códigos de módulos reales.
+Pendientes reales: ensayar la demo con el hardware, probar la precisión en una cocción real (hielo y agua hirviendo ya están medidos: docs/PRUEBAS_DE_PRECISION.md y diapositiva 9), validar sonda y cable para uso continuo en horno, comprobar la llegada del aviso push a un teléfono real, conseguir respuestas de la encuesta, grabar los videos y preparar las redes. No publicar credenciales ni códigos de módulos reales.
 
 La web sin módulo vinculado usa datos simulados. Las pruebas de software no prueban el funcionamiento físico.
