@@ -57,7 +57,7 @@ Pendiente:
 - Probar la precisión en una cocción real (hielo y agua hirviendo ya están medidos). Protocolo en [`docs/PRUEBAS_DE_PRECISION.md`](docs/PRUEBAS_DE_PRECISION.md).
 - Validar la sonda y el cable para uso continuo dentro del horno.
 - Validar el certificado del servidor en el firmware: hoy la conexión va cifrada, pero usa `setInsecure`.
-- Probar el producto con usuarios: la encuesta está preparada y falta juntar respuestas y hacer un piloto.
+- Probar el producto con usuarios: la encuesta para horno está preparada ([`docs/ENCUESTA_HORNO.md`](docs/ENCUESTA_HORNO.md)) y falta juntar respuestas y hacer un piloto.
 - Validar con compradores el precio propuesto: $44.990 (materiales $33.000).
 - Publicar una app nativa en las tiendas.
 
@@ -181,6 +181,7 @@ pnpm test:rendered
 | [`docs/MANUAL_DE_USUARIO.md`](docs/MANUAL_DE_USUARIO.md) | Cómo configurar y usar el producto |
 | [`docs/ARQUITECTURA_COCINA.md`](docs/ARQUITECTURA_COCINA.md) | Arquitectura, decisiones y etapas |
 | [`docs/PRUEBAS_DE_PRECISION.md`](docs/PRUEBAS_DE_PRECISION.md) | Protocolo y resultados de las pruebas de precisión |
+| [`docs/ENCUESTA_HORNO.md`](docs/ENCUESTA_HORNO.md) | Encuesta de validación para horno, con precios de referencia actuales |
 | [`firmware/README.md`](firmware/README.md) | Conexiones, carga del programa y señales del módulo |
 | [`ios/README.md`](ios/README.md) | Prototipo experimental de app nativa para iPhone |
 | [`design/modelos 3d/`](design/modelos%203d/) | Carcasa: modelos, medidas, impresión y armado |
