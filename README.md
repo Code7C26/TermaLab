@@ -73,7 +73,7 @@ Todo el material del pitch está en [`entregables/`](entregables/). Conviene emp
 
 | Archivo | Para qué |
 |---|---|
-| [`Pitch_Final_TermaLab.pptx`](entregables/Pitch_Final_TermaLab.pptx) | Presentación de 15 diapositivas con notas del orador: tiempo, quién habla y qué decir (24 min + 5 de preguntas) |
+| [`Pitch_Final_TermaLab.pptx`](entregables/Pitch_Final_TermaLab.pptx) | Presentación de 16 diapositivas con notas del orador: tiempo, quién habla y qué decir (24 min + 5 de preguntas) |
 | [`Pitch_Final_TermaLab.pdf`](entregables/Pitch_Final_TermaLab.pdf) | La misma presentación, para proyectar desde cualquier computadora |
 | [`fuentes/`](entregables/fuentes/) | Tipografía DM Sans (licencia OFL): instalarla en la compu donde se abra el pptx |
 | [`Guion_y_plan_TermaLab.docx`](entregables/Guion_y_plan_TermaLab.docx) | Guion, reparto, demo, preguntas del jurado y plan de validación |

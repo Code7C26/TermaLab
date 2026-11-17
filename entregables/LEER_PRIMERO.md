@@ -2,7 +2,7 @@
 
 Preparado el 12 de noviembre de 2026 y actualizado el 13 de noviembre. Abrir primero Guion_y_plan_TermaLab.docx.
 
-- Presentación: Pitch_Final_TermaLab.pptx, 15 diapositivas con el diseño del deck armado en Claude (DM Sans, azul, celeste y naranja). Cada diapositiva tiene en las notas el tiempo, quién habla y qué decir: 24 minutos más 5 de preguntas.
+- Presentación: Pitch_Final_TermaLab.pptx, 16 diapositivas con el diseño del deck armado en Claude (DM Sans, azul, celeste y naranja). Cada diapositiva tiene en las notas el tiempo, quién habla y qué decir: 24 minutos más 5 de preguntas.
 - Pitch_Final_TermaLab.pdf: la misma presentación para proyectar desde cualquier computadora. Si se usa el pptx, instalar antes la tipografía de la carpeta fuentes/ (DM Sans); sin ella PowerPoint la reemplaza y cambia el diseño.
 - QR_app.png: web pública https://termalab.termalab-cocina.workers.dev/. La última diapositiva tiene este QR y el del repositorio público https://github.com/Code7C26/TermaLab.
 - Kit_impresion_TermaLab.pdf: flyer, 6 stickers, credenciales y resumen ejecutivo.
