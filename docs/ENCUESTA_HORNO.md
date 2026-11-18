@@ -1,6 +1,6 @@
 # Encuesta de validación: TermaLab para horno
 
-Objetivo: comprobar con gente que cocina en casa el problema de la diapositiva 4
+Objetivo: comprobar con gente que cocina en casa el problema de la diapositiva 5
 (abrir el horno, pinchar y adivinar, quedarse al lado) y el precio propuesto de
 $44.990.
 
@@ -111,5 +111,5 @@ usarla, conviene revisar los precios de Mercado Libre y correr las franjas.
 - Interés: porcentaje que marcó 4 o 5 en la pregunta 7.
 - Precio: porcentaje que pagaría $45.000 o más (pregunta 8) y porcentaje de
   "Sí" en la pregunta 9. Contar los "Tal vez" aparte: interés no es compra.
-- Para la diapositiva 4 alcanza con un número, por ejemplo: "7 de cada 10 abren
+- Para la diapositiva 5 alcanza con un número, por ejemplo: "7 de cada 10 abren
   el horno 3 veces o más cuando cocinan".
