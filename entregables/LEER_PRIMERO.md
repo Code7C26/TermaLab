@@ -7,7 +7,6 @@ Preparado el 12 de noviembre de 2026 y actualizado el 13 de noviembre. Abrir pri
 - QR_app.png: web pública https://termalab.termalab-cocina.workers.dev/. La última diapositiva tiene este QR y el del repositorio público https://github.com/Code7C26/TermaLab.
 - Kit_impresion_TermaLab.pdf: flyer, 6 stickers, credenciales y resumen ejecutivo.
 - evidencias: pruebas automáticas ejecutadas y respuesta de demostración pública.
-- anterior: la versión 3 del pitch, como historial.
 
 Reparto: cada uno presenta lo que hizo según los roles del README (Oreste, Scrum Master y desarrollo; Julián, investigación y diseño). Presupuesto: materiales $33.000, precio propuesto $44.990 (27 % de margen), precios de Mercado Libre del 12/11/2026.
 

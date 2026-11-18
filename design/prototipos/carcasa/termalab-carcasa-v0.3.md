@@ -32,7 +32,7 @@ para el cableado de la sonda.
 
 - `termalab-carcasa-v0.3.1-base.stl`: base, ya orientada para imprimir.
 - `termalab-carcasa-v0.3.1-tapa.stl`: tapa invertida, orientada sin soportes.
-- `termalab-carcasa-v0.3.1-placa-completa.stl`: ambas piezas en una placa.
+- `termalab-carcasa-v0.3-placa-completa.stl`: ambas piezas en una placa.
 - `termalab-carcasa-v0.3.js`: fuente paramétrica JSCAD.
 
 ## Ajustes recomendados en Creality Print

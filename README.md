@@ -73,14 +73,13 @@ Todo el material del pitch está en [`entregables/`](entregables/). Conviene emp
 
 | Archivo | Para qué |
 |---|---|
-| [`Pitch_Final_TermaLab.pptx`](entregables/Pitch_Final_TermaLab.pptx) | Presentación de 16 diapositivas con notas del orador: tiempo, quién habla y qué decir (24 min + 5 de preguntas) |
+| [`Pitch_Final_TermaLab.pptx`](entregables/Pitch_Final_TermaLab.pptx) | Presentación de 17 diapositivas con notas del orador: tiempo, quién habla y qué decir (24 min + 5 de preguntas) |
 | [`Pitch_Final_TermaLab.pdf`](entregables/Pitch_Final_TermaLab.pdf) | La misma presentación, para proyectar desde cualquier computadora |
 | [`fuentes/`](entregables/fuentes/) | Tipografía DM Sans (licencia OFL): instalarla en la compu donde se abra el pptx |
 | [`Guion_y_plan_TermaLab.docx`](entregables/Guion_y_plan_TermaLab.docx) | Guion, reparto, demo, preguntas del jurado y plan de validación |
 | [`Kit_impresion_TermaLab.pdf`](entregables/Kit_impresion_TermaLab.pdf) | Flyer, stickers, credenciales y resumen ejecutivo |
 | [`Textos_y_guiones_difusion.md`](entregables/Textos_y_guiones_difusion.md) | Guiones de video y textos para redes |
 | [`evidencias/`](entregables/evidencias/) | Salida de las pruebas automáticas y respuesta de la demo pública |
-| [`anterior/`](entregables/anterior/) | Versión anterior del pitch (v3), como historial |
 
 | Probar la app | Código y documentación |
 |:---:|:---:|
@@ -169,7 +168,7 @@ pnpm test:rendered
 ├── ios/          Prototipo experimental de app nativa para iPhone (SwiftUI)
 ├── assets/       Imágenes, íconos, manifest y service worker
 ├── design/       Prototipos y modelos 3D de la carcasa
-├── docs/         Documentación, análisis y presentaciones anteriores
+├── docs/         Documentación y análisis
 ├── entregables/  Presentación final: pitch, guion, kit de impresión y evidencias
 └── README.md
 ```
@@ -187,9 +186,8 @@ pnpm test:rendered
 | [`design/modelos 3d/`](design/modelos%203d/) | Carcasa: modelos, medidas, impresión y armado |
 | [`entregables/`](entregables/) | Presentación final, guion, kit de impresión y evidencias |
 | [`docs/`](docs/) | Análisis previos: Bluetooth vs Wi‑Fi, comparación de sensores, FODA, product backlog, roles y encuesta |
-| [`docs/presentaciones/`](docs/presentaciones/) y [`docs/archivo/`](docs/archivo/) | Presentaciones y README de etapas anteriores, guardados como historial |
 
 ## Equipo
 
 - Oreste Berta: Scrum Master y desarrollo. Planificación, software, firmware y carcasa impresa en 3D.
-- Julián Ledesma: investigación y diseño. Comparación de sensores, elección de Wi‑Fi, logo y primer prototipo de la app.
+- Julián Ledesma: investigación y diseño. Comparación de sensores, elección de Wi‑Fi, integración y cableado, logo y primer prototipo de la app.
